@@ -1,103 +1,61 @@
-import { headers } from "next/headers";
-import Link from "next/link";
-import { redirect } from "next/navigation";
+import { type Metadata } from "next";
 
-import { LatestPost } from "@/app/_components/post";
-import { auth } from "@/server/better-auth";
-import { getSession } from "@/server/better-auth/server";
-import { api, HydrateClient } from "@/trpc/server";
+import { BenefitsSection } from "@/components/layout/sections/benefits";
+import { CommunitySection } from "@/components/layout/sections/community";
+import { ContactSection } from "@/components/layout/sections/contact";
+import { FAQSection } from "@/components/layout/sections/faq";
+import { FeaturesSection } from "@/components/layout/sections/features";
+import { FooterSection } from "@/components/layout/sections/footer";
+import { HeroSection } from "@/components/layout/sections/hero";
+import { PricingSection } from "@/components/layout/sections/pricing";
+import { ServicesSection } from "@/components/layout/sections/services";
+import { SponsorsSection } from "@/components/layout/sections/sponsors";
+import { TeamSection } from "@/components/layout/sections/team";
+import { TestimonialSection } from "@/components/layout/sections/testimonial";
 
-export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
-  const session = await getSession();
+export const metadata: Metadata = {
+  title: "Shadcn - Landing template",
+  description: "Free Shadcn landing page for developers",
+  openGraph: {
+    type: "website",
+    url: "https://github.com/nobruf/shadcn-landing-page.git",
+    title: "Shadcn - Landing template",
+    description: "Free Shadcn landing page for developers",
+    images: [
+      {
+        url: "https://res.cloudinary.com/dbzv9xfjp/image/upload/v1723499276/og-images/shadcn-vue.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Shadcn - Landing template",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "https://github.com/nobruf/shadcn-landing-page.git",
+    title: "Shadcn - Landing template",
+    description: "Free Shadcn landing page for developers",
+    images: [
+      "https://res.cloudinary.com/dbzv9xfjp/image/upload/v1723499276/og-images/shadcn-vue.jpg",
+    ],
+  },
+};
 
-  if (session) {
-    void api.post.getLatest.prefetch();
-  }
-
+export default function Home() {
   return (
-    <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-          </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello ? hello.greeting : "Loading tRPC query..."}
-            </p>
-
-            <div className="flex flex-col items-center justify-center gap-4">
-              <p className="text-center text-2xl text-white">
-                {session && <span>Logged in as {session.user?.name}</span>}
-              </p>
-              {!session ? (
-                <form>
-                  <button
-                    className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-                    formAction={async () => {
-                      "use server";
-                      const res = await auth.api.signInSocial({
-                        body: {
-                          provider: "google",
-                          callbackURL: "/",
-                        },
-                      });
-                      if (!res.url) {
-                        throw new Error("No URL returned from signInSocial");
-                      }
-                      redirect(res.url);
-                    }}
-                  >
-                    Sign in with Google
-                  </button>
-                </form>
-              ) : (
-                <form>
-                  <button
-                    className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-                    formAction={async () => {
-                      "use server";
-                      await auth.api.signOut({
-                        headers: await headers(),
-                      });
-                      redirect("/");
-                    }}
-                  >
-                    Sign out
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-
-          {session?.user && <LatestPost />}
-        </div>
-      </main>
-    </HydrateClient>
+    <>
+      <HeroSection />
+      <SponsorsSection />
+      <BenefitsSection />
+      <FeaturesSection />
+      <ServicesSection />
+      <TestimonialSection />
+      <TeamSection />
+      <CommunitySection />
+      <PricingSection />
+      <ContactSection />
+      <FAQSection />
+      <FooterSection />
+    </>
   );
 }
