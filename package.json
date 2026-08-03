@@ -58,6 +58,7 @@
     "eslint-config-next": "^15.2.3",
     "eslint-plugin-drizzle": "^0.2.3",
     "jsdom": "30.0.1",
+    "msw": "2.15.0",
     "pg": "8.22.0",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
