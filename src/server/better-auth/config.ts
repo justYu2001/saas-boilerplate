@@ -7,6 +7,10 @@ import { db } from "@/server/db";
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg", // or "pg" or "mysql"
+    // The `neon-http` driver has no transaction support, so operations run
+    // sequentially instead. This is Better Auth's default — set explicitly so it
+    // isn't flipped on without noticing the driver can't honour it.
+    transaction: false,
   }),
   emailAndPassword: {
     enabled: true,
