@@ -12,6 +12,15 @@ export default defineConfig({
     environment: "jsdom",
     exclude: [...configDefaults.exclude, ".claude/worktrees/**"],
     setupFiles: ["./vitest.setup.ts"],
+    // Dummy values so `src/env.js` validation passes when a test imports something that
+    // transitively pulls in `@/server/better-auth` or `@/server/db` (e.g. a tRPC router).
+    // Backend tests use PGlite (see `src/server/db/test-db.ts`) instead of `DATABASE_URL`.
+    env: {
+      BETTER_AUTH_URL: "http://localhost:3000",
+      BETTER_AUTH_GOOGLE_CLIENT_ID: "test-client-id",
+      BETTER_AUTH_GOOGLE_CLIENT_SECRET: "test-client-secret",
+      DATABASE_URL: "postgres://user:password@localhost:5432/test",
+    },
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     restoreMocks: true,
     coverage: {
