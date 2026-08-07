@@ -1,5 +1,4 @@
 import { renderToStaticMarkup } from "react-dom/server";
-
 import type { Graph, Person, Thing, WithContext } from "schema-dts";
 import { describe, expect, it } from "vitest";
 

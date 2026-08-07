@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import { ChevronsDown, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronsDown, Menu } from "lucide-react";
+import React from "react";
 
 import { Button } from "@/components/ui/button";
 import {

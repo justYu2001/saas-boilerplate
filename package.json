@@ -54,6 +54,7 @@
   "devDependencies": {
     "@electric-sql/pglite": "0.5.4",
     "@eslint/eslintrc": "3.3.6",
+    "@ianvs/prettier-plugin-sort-imports": "4.7.1",
     "@next/eslint-plugin-next": "15.5.22",
     "@tailwindcss/postcss": "4.3.3",
     "@testing-library/jest-dom": "7.0.0",

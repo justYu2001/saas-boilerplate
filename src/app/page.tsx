@@ -1,8 +1,7 @@
 import { type Metadata } from "next";
+import type { Graph, Person, SoftwareApplication, WebSite } from "schema-dts";
 
-import type { Graph, Person, WebSite, SoftwareApplication } from "schema-dts";
-import { DOMAIN } from "@/constants/domain";
-
+import { JsonLd } from "@/components/json-ld";
 import { BenefitsSection } from "@/components/layout/sections/benefits";
 import { CommunitySection } from "@/components/layout/sections/community";
 import { ContactSection } from "@/components/layout/sections/contact";
@@ -15,7 +14,7 @@ import { ServicesSection } from "@/components/layout/sections/services";
 import { SponsorsSection } from "@/components/layout/sections/sponsors";
 import { TeamSection } from "@/components/layout/sections/team";
 import { TestimonialSection } from "@/components/layout/sections/testimonial";
-import { JsonLd } from "@/components/json-ld";
+import { DOMAIN } from "@/constants/domain";
 
 export const metadata: Metadata = {
   title: "Shadcn - Landing template",
