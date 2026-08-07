@@ -1,5 +1,8 @@
 import { type Metadata } from "next";
 
+import type { Graph, Person, WebSite, SoftwareApplication } from "schema-dts";
+import { DOMAIN } from "@/constants/domain";
+
 import { BenefitsSection } from "@/components/layout/sections/benefits";
 import { CommunitySection } from "@/components/layout/sections/community";
 import { ContactSection } from "@/components/layout/sections/contact";
@@ -12,6 +15,7 @@ import { ServicesSection } from "@/components/layout/sections/services";
 import { SponsorsSection } from "@/components/layout/sections/sponsors";
 import { TeamSection } from "@/components/layout/sections/team";
 import { TestimonialSection } from "@/components/layout/sections/testimonial";
+import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "Shadcn - Landing template",
@@ -41,9 +45,41 @@ export const metadata: Metadata = {
   },
 };
 
+const personSchema: Person = {
+  "@type": "Person",
+  "@id": `${DOMAIN}/#author`,
+  name: "Euan",
+  url: DOMAIN,
+};
+
+const websiteSchema: WebSite = {
+  "@type": "WebSite",
+  "@id": `${DOMAIN}/#website`,
+  name: "SAAS Boilerplate",
+  url: DOMAIN,
+};
+
+const softwareApplication: SoftwareApplication = {
+  "@type": "SoftwareApplication",
+  name: "SAAS Boilerplate",
+  applicationCategory: "BusinessApplication",
+  offers: {
+    "@type": "Offer",
+    price: 0,
+    priceCurrency: "USD",
+  },
+};
+
+const homeSchema: Graph = {
+  "@context": "https://schema.org",
+  "@graph": [personSchema, websiteSchema, softwareApplication],
+};
+
 export default function Home() {
   return (
     <>
+      <JsonLd data={homeSchema} />
+
       <HeroSection />
       <SponsorsSection />
       <BenefitsSection />
