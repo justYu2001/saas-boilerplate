@@ -80,7 +80,7 @@ export const ContactSection = () => {
       `Hello I am ${firstName} ${lastName}, my Email is ${email}.\n${message}`,
     )}`;
 
-    window.location.href = mailToLink;
+    window.location.assign(mailToLink);
   }
 
   return (
