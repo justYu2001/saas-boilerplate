@@ -171,4 +171,36 @@
   html {
     @apply scroll-smooth font-sans;
   }
+
+  /*
+   * Browser-owned surfaces. These ship with UA defaults that belong to no
+   * design system, so they are pulled onto the theme tokens here rather than
+   * being restyled ad hoc per component.
+   */
+  ::selection {
+    background-color: color-mix(in oklch, var(--primary) 28%, transparent);
+    color: var(--foreground);
+  }
+
+  input,
+  textarea,
+  [contenteditable] {
+    caret-color: var(--primary);
+  }
+
+  html {
+    scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent)
+      transparent;
+  }
+
+  /* Digits align in columns wherever they are compared or counted. */
+  [data-tabular] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
 }

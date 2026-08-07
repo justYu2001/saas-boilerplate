@@ -3,7 +3,6 @@ import "@/styles/globals.css";
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
-import { Navbar } from "@/components/layout/navbar";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { TRPCReactProvider } from "@/trpc/react";
 
@@ -30,10 +29,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <TRPCReactProvider>
-            <Navbar />
-            {children}
-          </TRPCReactProvider>
+          <TRPCReactProvider>{children}</TRPCReactProvider>
         </ThemeProvider>
       </body>
     </html>

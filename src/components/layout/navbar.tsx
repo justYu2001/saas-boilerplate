@@ -1,10 +1,11 @@
 "use client";
 
-import { ChevronsDown, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -61,9 +62,8 @@ export const Navbar = () => {
 
   return (
     <header className="border-secondary bg-card sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between rounded-2xl border p-2 inset-shadow-sm md:w-[70%] lg:w-[75%] lg:max-w-(--breakpoint-xl)">
-      <Link href="/" className="flex items-center text-lg font-bold">
-        <ChevronsDown className="border-secondary from-primary via-primary/70 to-primary mr-2 size-9 rounded-lg border bg-linear-to-tr text-white" />
-        Shadcn
+      <Link href="/">
+        <Logo />
       </Link>
 
       {/* Mobile */}
@@ -84,9 +84,8 @@ export const Navbar = () => {
             <div>
               <SheetHeader className="mb-4 ml-4">
                 <SheetTitle className="flex items-center">
-                  <Link href="/" className="flex items-center">
-                    <ChevronsDown className="border-secondary from-primary via-primary/70 to-primary mr-2 size-9 rounded-lg border bg-linear-to-tr text-white" />
-                    Shadcn
+                  <Link href="/">
+                    <Logo />
                   </Link>
                 </SheetTitle>
               </SheetHeader>
