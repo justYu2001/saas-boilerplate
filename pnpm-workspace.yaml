@@ -1,5 +1,7 @@
 allowBuilds:
   esbuild: true
-  msw: true
+  # No-op without an `msw.workerDirectory` field in package.json.
+  # Flip to true if a browser worker is added (pnpm msw init public/).
+  msw: false
   sharp: true
   unrs-resolver: true
