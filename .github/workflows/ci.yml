@@ -100,8 +100,19 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # next build loads next.config.js, which imports src/env.js. SKIP_ENV_VALIDATION
-      # bypasses the real env schema check here since CI has no .env.
+      # `next build` sets NODE_ENV=production, which makes BETTER_AUTH_SECRET
+      # required, and it actually executes route modules while collecting page
+      # data for /api/trpc/[trpc] — so SKIP_ENV_VALIDATION isn't enough here
+      # (it skips the schema check but leaves the vars undefined, and code
+      # further down calls `new URL()` on them). Dummy values instead, same
+      # ones vitest.config.ts already uses for tests.
       - run: pnpm build
         env:
-          SKIP_ENV_VALIDATION: "1"
+          BETTER_AUTH_URL: "http://localhost:3000"
+          BETTER_AUTH_SECRET: "test-better-auth-secret-32-characters-long"
+          BETTER_AUTH_GOOGLE_CLIENT_ID: "test-client-id"
+          BETTER_AUTH_GOOGLE_CLIENT_SECRET: "test-client-secret"
+          DATABASE_URL: "postgres://user:password@localhost:5432/test"
+          RESEND_API_KEY: "test-resend-api-key"
+          EMAIL_FROM: "Test <login@test.example>"
+          NEXT_PUBLIC_CRISP_WEBSITE_ID: "test-crisp-website-id"
