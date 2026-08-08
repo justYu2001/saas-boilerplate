@@ -95,9 +95,9 @@ describe("renderLoginCodeEmail", () => {
     expect(render().text.startsWith("Hi there,")).toBe(true);
   });
 
-  it("should sign off as the product rather than as an invented person", () => {
+  it("should sign off as Euan", () => {
     const { html, text } = render();
-    const signature = `The ${APP_NAME} team`;
+    const signature = "Euan";
 
     expect(html).toContain(signature);
     expect(text).toContain(signature);
