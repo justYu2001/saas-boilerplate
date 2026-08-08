@@ -14,6 +14,44 @@ export const LOGIN_CODE_TTL_MINUTES = 10;
  */
 export const LOGIN_RESEND_COOLDOWN_SECONDS = 30;
 
+/**
+ * How many wrong guesses one code tolerates before Better Auth discards it and
+ * the user has to request another.
+ *
+ * This is the primary defence, not the rate limit below. A 4-digit code is one
+ * of only 10,000, so what keeps it safe is that a given code dies after three
+ * misses — an attacker gets three guesses per code they cannot see, not three
+ * guesses per second against a code that stays valid for ten minutes.
+ * Lengthening {@link LOGIN_CODE_LENGTH} is the lever to pull if that trade
+ * isn't right for your product; raising this number is not.
+ */
+export const LOGIN_CODE_MAX_ATTEMPTS = 3;
+
+/**
+ * Server-side ceiling on how often one caller may ask for a code.
+ *
+ * The client cooldown in {@link LOGIN_RESEND_COOLDOWN_SECONDS} is a courtesy —
+ * it survives neither a page reload nor a script. This is the version that
+ * holds, and it exists to stop an inbox being used as a weapon rather than to
+ * pace an honest user, so it is set a little looser than the cooldown.
+ *
+ * Better Auth stores these counters in memory by default, which means one
+ * bucket per running instance. On a single container that is exact; behind
+ * several it is only approximate, and a deployment that cares should move
+ * `rateLimit.storage` to `"database"` or a shared secondary store.
+ */
+export const LOGIN_CODE_SEND_RATE_LIMIT = {
+  windowSeconds: 60,
+  maxRequests: 3,
+} as const;
+
+/**
+ * Where a successful login lands. There is no app shell in the boilerplate
+ * yet, so the marketing home page stands in — point this at the real
+ * post-login surface as soon as one exists.
+ */
+export const LOGIN_REDIRECT_PATH = "/";
+
 export interface OAuthProvider {
   /** Matches the key under `socialProviders` in the Better Auth config. */
   id: "google";

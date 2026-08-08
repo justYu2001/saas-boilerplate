@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { LoaderCircle, Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -18,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import {
   LOGIN_CODE_LENGTH,
   LOGIN_COPY,
+  LOGIN_REDIRECT_PATH,
   LOGIN_RESEND_COOLDOWN_SECONDS,
   OAUTH_PROVIDERS,
 } from "@/constants/auth";
@@ -153,6 +155,7 @@ function AnimatedFieldError({ id, message }: { id: string; message?: string }) {
 }
 
 export function LoginForm() {
+  const router = useRouter();
   const emailId = useId();
   const errorId = useId();
   const helperId = useId();
@@ -163,6 +166,14 @@ export function LoginForm() {
   const [pendingProvider, setPendingProvider] = useState<string | null>(null);
   const [resendState, setResendState] = useState<ResendState>("idle");
   const [resendSecondsLeft, setResendSecondsLeft] = useState(0);
+  /*
+   * The session exists but the next page has not painted yet. Without this the
+   * submit button springs back to its resting label the instant the request
+   * settles and then sits there, apparently idle, for the whole route
+   * transition — reading as a login that quietly did nothing and inviting a
+   * second press.
+   */
+  const [isLeaving, setIsLeaving] = useState(false);
 
   const isProviderPending = pendingProvider !== null;
   const isBusy = isProviderPending;
@@ -259,6 +270,7 @@ export function LoginForm() {
     resetVerifyForm({ code: "" });
     setResendState("idle");
     setResendSecondsLeft(0);
+    setIsLeaving(false);
   };
 
   /*
@@ -274,6 +286,17 @@ export function LoginForm() {
 
       try {
         await verifyLoginCode(email, code);
+
+        setIsLeaving(true);
+        /*
+         * `replace`, not `push`: the login page has done its job and must not
+         * be somewhere the back button can return a signed-in user to.
+         * `refresh` then discards the cached server render taken before the
+         * session cookie existed, so the destination is rendered as the
+         * logged-in user rather than as a stranger.
+         */
+        router.replace(LOGIN_REDIRECT_PATH);
+        router.refresh();
       } catch {
         setVerifyError("root", { message: LOGIN_COPY.verifyError });
       }
@@ -301,8 +324,10 @@ export function LoginForm() {
      * just arrived is exactly what the user should be doing while it runs, so
      * the field itself stays live.
      */
-    const isCodeBusy = isVerifying || resendState === "pending";
-    const isResendLocked = resendState !== "idle";
+    const isCodeBusy = isVerifying || isLeaving || resendState === "pending";
+    // Once the login has landed, a new code would only invalidate the one that
+    // just worked — and there is nothing left on this page to type it into.
+    const isResendLocked = isLeaving || resendState !== "idle";
     const resendLabel =
       resendState === "pending"
         ? LOGIN_COPY.resendPending
@@ -378,15 +403,15 @@ export function LoginForm() {
               type="submit"
               className="h-11 w-full gap-2 text-sm font-medium"
               disabled={isCodeBusy}
-              aria-busy={isVerifying}
+              aria-busy={isVerifying || isLeaving}
             >
-              {isVerifying && (
+              {(isVerifying || isLeaving) && (
                 <LoaderCircle
                   aria-hidden="true"
                   className="size-4 animate-spin"
                 />
               )}
-              {isVerifying
+              {isVerifying || isLeaving
                 ? LOGIN_COPY.verifySubmitPending
                 : LOGIN_COPY.verifySubmit}
             </Button>
@@ -428,6 +453,7 @@ export function LoginForm() {
             <button
               type="button"
               className={stepBackClassName}
+              disabled={isLeaving}
               onClick={startOver}
             >
               {LOGIN_COPY.sentReset}

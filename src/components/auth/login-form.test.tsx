@@ -2,17 +2,36 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { LOGIN_COPY } from "@/constants/auth";
-import { sendLoginCode, signInWithProvider } from "@/lib/auth/send-login-code";
+import {
+  LOGIN_CODE_LENGTH,
+  LOGIN_COPY,
+  LOGIN_REDIRECT_PATH,
+} from "@/constants/auth";
+import {
+  sendLoginCode,
+  signInWithProvider,
+  verifyLoginCode,
+} from "@/lib/auth/send-login-code";
 
 import { LoginForm } from "./login-form";
 
 vi.mock("@/lib/auth/send-login-code", () => ({
   sendLoginCode: vi.fn(),
+  verifyLoginCode: vi.fn(),
   signInWithProvider: vi.fn(),
 }));
 
+const routerReplace = vi.fn();
+const routerRefresh = vi.fn();
+
+// The form navigates on success, and `useRouter` throws outside an App Router
+// tree. What matters here is that it is asked to leave, not how Next does it.
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: routerReplace, refresh: routerRefresh }),
+}));
+
 const sendLoginCodeMock = vi.mocked(sendLoginCode);
+const verifyLoginCodeMock = vi.mocked(verifyLoginCode);
 const signInWithProviderMock = vi.mocked(signInWithProvider);
 
 const emailField = () => screen.getByLabelText(LOGIN_COPY.emailLabel);
@@ -29,8 +48,23 @@ const expectAlert = (message: string) =>
 
 beforeEach(() => {
   sendLoginCodeMock.mockResolvedValue(undefined);
+  verifyLoginCodeMock.mockResolvedValue(undefined);
   signInWithProviderMock.mockResolvedValue(undefined);
 });
+
+/** Walks the form to the code-entry step and returns the OTP input. */
+const reachCodeStep = async (
+  user: ReturnType<typeof userEvent.setup>,
+  email = "founder@example.com",
+) => {
+  await user.type(emailField(), email);
+  await user.click(submitButton());
+  await screen.findByRole("status");
+
+  return screen.getByLabelText(LOGIN_COPY.codeLabel);
+};
+
+const A_VALID_CODE = "4".repeat(LOGIN_CODE_LENGTH);
 
 describe("LoginForm", () => {
   it("should render the email field, submit action and helper text", () => {
@@ -183,6 +217,148 @@ describe("LoginForm", () => {
 
     await user.click(
       screen.getByRole("button", { name: /continue with google/i }),
+    );
+
+    await expectAlert(LOGIN_COPY.genericError);
+  });
+});
+
+describe("LoginForm code entry", () => {
+  it("should verify against the address the code was sent to, not whatever is typed later", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    const codeField = await reachCodeStep(user, "  Founder@Example.COM  ");
+    await user.type(codeField, A_VALID_CODE);
+
+    await waitFor(() =>
+      expect(verifyLoginCodeMock).toHaveBeenCalledWith(
+        "founder@example.com",
+        A_VALID_CODE,
+      ),
+    );
+  });
+
+  it("should submit as soon as the last digit lands, without waiting for the button", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    const codeField = await reachCodeStep(user);
+    await user.type(codeField, A_VALID_CODE);
+
+    await waitFor(() => expect(verifyLoginCodeMock).toHaveBeenCalledTimes(1));
+  });
+
+  it("should not call the server with a half-typed code", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    const codeField = await reachCodeStep(user);
+    await user.type(codeField, "4".repeat(LOGIN_CODE_LENGTH - 1));
+    await user.click(
+      screen.getByRole("button", { name: LOGIN_COPY.verifySubmit }),
+    );
+
+    await expectAlert(`Enter the ${LOGIN_CODE_LENGTH}-digit code.`);
+    expect(verifyLoginCodeMock).not.toHaveBeenCalled();
+  });
+
+  /*
+   * Staying on the login page after a successful login reads as a login that
+   * failed. `replace` rather than `push` so the back button cannot return a
+   * signed-in user here.
+   */
+  it("should leave the login page once the code is accepted", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    const codeField = await reachCodeStep(user);
+    await user.type(codeField, A_VALID_CODE);
+
+    await waitFor(() =>
+      expect(routerReplace).toHaveBeenCalledWith(LOGIN_REDIRECT_PATH),
+    );
+  });
+
+  it("should discard the render taken before the session existed", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    const codeField = await reachCodeStep(user);
+    await user.type(codeField, A_VALID_CODE);
+
+    await waitFor(() => expect(routerRefresh).toHaveBeenCalled());
+  });
+
+  it("should stay put and offer another try when the code is wrong", async () => {
+    verifyLoginCodeMock.mockRejectedValue(new Error("Invalid OTP"));
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    const codeField = await reachCodeStep(user);
+    await user.type(codeField, A_VALID_CODE);
+
+    await expectAlert(LOGIN_COPY.verifyError);
+    expect(routerReplace).not.toHaveBeenCalled();
+  });
+
+  it("should not leak why verification failed", async () => {
+    verifyLoginCodeMock.mockRejectedValue(
+      new Error("OTP expired for founder@example.com"),
+    );
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    const codeField = await reachCodeStep(user);
+    await user.type(codeField, A_VALID_CODE);
+    await expectAlert(LOGIN_COPY.verifyError);
+
+    expect(screen.queryByText(/expired/i)).not.toBeInTheDocument();
+  });
+
+  it("should request a fresh code for the same address when asked to resend", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    await reachCodeStep(user);
+    sendLoginCodeMock.mockClear();
+
+    await user.click(
+      screen.getByRole("button", { name: new RegExp(LOGIN_COPY.resendAction) }),
+    );
+
+    await waitFor(() =>
+      expect(sendLoginCodeMock).toHaveBeenCalledWith("founder@example.com"),
+    );
+  });
+
+  /*
+   * Resending rotates the code server-side, so whatever is in the field is
+   * already dead. Leaving it there invites the user to submit it.
+   */
+  it("should clear the stale code after a resend", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    const codeField = await reachCodeStep(user);
+    await user.type(codeField, "4".repeat(LOGIN_CODE_LENGTH - 1));
+
+    await user.click(
+      screen.getByRole("button", { name: new RegExp(LOGIN_COPY.resendAction) }),
+    );
+
+    await waitFor(() => expect(codeField).toHaveValue(""));
+  });
+
+  it("should report a failed resend rather than pretending a code is on its way", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    await reachCodeStep(user);
+    sendLoginCodeMock.mockRejectedValue(new Error("Too many requests"));
+
+    await user.click(
+      screen.getByRole("button", { name: new RegExp(LOGIN_COPY.resendAction) }),
     );
 
     await expectAlert(LOGIN_COPY.genericError);

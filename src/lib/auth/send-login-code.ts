@@ -1,83 +1,79 @@
-import type { OAuthProvider } from "@/constants/auth";
+import { LOGIN_REDIRECT_PATH, type OAuthProvider } from "@/constants/auth";
+import { authClient } from "@/server/better-auth/client";
 
 /**
- * The one file to change when wiring real authentication.
+ * The login page's transport layer.
  *
- * Both functions are deliberate stubs: the login page ships as presentation
- * only. They resolve on success and reject on failure, which is the contract
- * the form's loading and error states are built against — so replacing the
- * bodies below needs no changes in the UI.
+ * Every function resolves on success and rejects on failure — that is the
+ * whole contract the form's loading and error states are built against, and
+ * the reason the form never inspects a response body. Rejection reasons carry
+ * the underlying cause for the console and for tests; the form deliberately
+ * discards them and shows one fixed sentence instead, so a failure cannot be
+ * read as evidence about whether an account exists.
  */
 
-const STUB_LATENCY_MS = 900;
-
-const delay = (ms: number) =>
-  new Promise<void>((resolve) => setTimeout(resolve, ms));
+/**
+ * Better Auth's client returns `{ data, error }` rather than throwing. This
+ * turns that back into the exception the callers here promise, keeping the
+ * `error` narrowing in one place instead of at all three call sites.
+ */
+function assertOk(
+  error: { message?: string | undefined } | null,
+  fallbackMessage: string,
+): void {
+  if (error) {
+    throw new Error(error.message ?? fallbackMessage);
+  }
+}
 
 /**
- * Emails a short-lived login code.
+ * Emails a short-lived login code, creating the account on first use.
  *
- * To make this real, add Better Auth's `emailOTP` plugin to
- * `src/server/better-auth/config.ts`, give it a `sendVerificationOTP`
- * implementation backed by a transactional email provider, then replace this
- * body with:
- *
- * ```ts
- * const { error } = await authClient.emailOtp.sendVerificationOtp({
- *   email,
- *   type: "sign-in",
- * });
- * if (error) throw new Error(error.message);
- * ```
+ * Resolves as soon as Better Auth accepts the request. That is not the same as
+ * the email having been delivered: the send happens behind the endpoint and a
+ * provider failure is logged server-side rather than reported here. See the
+ * note on `sendVerificationOTP` in `src/server/better-auth/config.ts`.
  */
 export async function sendLoginCode(email: string): Promise<void> {
-  await delay(STUB_LATENCY_MS);
+  const { error } = await authClient.emailOtp.sendVerificationOtp({
+    email,
+    type: "sign-in",
+  });
 
-  if (!email) {
-    throw new Error("An email address is required.");
-  }
+  assertOk(error, "Better Auth refused to send the login code.");
 }
 
 /**
  * Verifies a login code and completes sign-in.
  *
- * To make this real, replace this body with:
- *
- * ```ts
- * const { error } = await authClient.signIn.emailOtp({ email, otp: code });
- * if (error) throw new Error(error.message);
- * ```
+ * On success the session cookie is already set by the response, so the caller
+ * only has to navigate. A wrong code rejects, and so does the third wrong code
+ * in a row — at which point the code itself is discarded and the user needs a
+ * new one.
  */
 export async function verifyLoginCode(
   email: string,
   code: string,
 ): Promise<void> {
-  await delay(STUB_LATENCY_MS);
+  const { error } = await authClient.signIn.emailOtp({ email, otp: code });
 
-  if (!email || !code) {
-    throw new Error("An email address and code are required.");
-  }
+  assertOk(error, "Better Auth rejected the login code.");
 }
 
 /**
  * Starts an OAuth redirect.
  *
- * Google is already configured in `src/server/better-auth/config.ts`, so this
- * body becomes:
- *
- * ```ts
- * await authClient.signIn.social({ provider, callbackURL: "/" });
- * ```
- *
- * once `BETTER_AUTH_GOOGLE_CLIENT_ID` and `..._SECRET` are set in the
- * environment.
+ * The client navigates the browser away itself when the provider answers, so
+ * on the happy path this never resolves — the page is gone. It only settles to
+ * report that the redirect could not be started.
  */
 export async function signInWithProvider(
   provider: OAuthProvider["id"],
 ): Promise<void> {
-  await delay(STUB_LATENCY_MS);
+  const { error } = await authClient.signIn.social({
+    provider,
+    callbackURL: LOGIN_REDIRECT_PATH,
+  });
 
-  if (!provider) {
-    throw new Error("A provider is required.");
-  }
+  assertOk(error, `Better Auth could not start the ${provider} redirect.`);
 }
