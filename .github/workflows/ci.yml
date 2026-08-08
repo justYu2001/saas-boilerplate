@@ -36,8 +36,8 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: actions/dependency-review-action@v4
 
-  verify:
-    name: Lint, typecheck, test, build
+  lint-typecheck:
+    name: Lint & typecheck
     runs-on: ubuntu-latest
     needs: supply-chain
     steps:
@@ -54,16 +54,54 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # next lint and next build load next.config.js, which imports src/env.js.
-      # SKIP_ENV_VALIDATION bypasses the real env schema check here since CI has
-      # no .env; `pnpm test` doesn't need it because vitest.config.ts already
-      # injects its own dummy values for the vars tests actually touch.
+      # next lint loads next.config.js, which imports src/env.js. SKIP_ENV_VALIDATION
+      # bypasses the real env schema check here since CI has no .env.
       - run: pnpm check
         env:
           SKIP_ENV_VALIDATION: "1"
 
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: supply-chain
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # No SKIP_ENV_VALIDATION here: vitest.config.ts already injects its own
+      # dummy values for the vars tests actually touch.
       - run: pnpm test
 
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: supply-chain
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # next build loads next.config.js, which imports src/env.js. SKIP_ENV_VALIDATION
+      # bypasses the real env schema check here since CI has no .env.
       - run: pnpm build
         env:
           SKIP_ENV_VALIDATION: "1"
