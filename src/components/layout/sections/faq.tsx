@@ -14,7 +14,7 @@ interface FAQProps {
 const FAQList: FAQProps[] = [
   {
     question: "Is this template free?",
-    answer: "Yes. It is a free NextJS Shadcn template.",
+    answer: "Yes. It is a free NextJS SaaS Boilerplate template.",
     value: "item-1",
   },
   {

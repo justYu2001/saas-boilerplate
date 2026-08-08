@@ -21,7 +21,7 @@ export const HeroSection = () => {
             <h1>
               Experience the
               <span className="to-primary bg-linear-to-r from-[#D247BF] bg-clip-text px-2 text-transparent">
-                Shadcn
+                SaaS Boilerplate
               </span>
               landing page
             </h1>

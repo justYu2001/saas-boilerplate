@@ -120,7 +120,7 @@ export const Navbar = () => {
               <div className="grid w-[600px] grid-cols-2 gap-5 p-4">
                 <Image
                   src="https://avatars.githubusercontent.com/u/75042455?v=4"
-                  alt="Shadcn"
+                  alt="SaaS Boilerplate"
                   className="h-full w-full rounded-md object-cover"
                   width={600}
                   height={600}

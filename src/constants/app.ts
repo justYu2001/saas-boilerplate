@@ -1,1 +1,1 @@
-export const APP_NAME = "Shadcn";
+export const APP_NAME = "SaaS Boilerplate";

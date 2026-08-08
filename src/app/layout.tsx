@@ -7,8 +7,8 @@ import { ThemeProvider } from "@/components/layout/theme-provider";
 import { TRPCReactProvider } from "@/trpc/react";
 
 export const metadata: Metadata = {
-  title: "Shadcn - Landing template",
-  description: "Free Shadcn landing page for developers",
+  title: "SaaS Boilerplate - Landing template",
+  description: "Free SaaS Boilerplate landing page for developers",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

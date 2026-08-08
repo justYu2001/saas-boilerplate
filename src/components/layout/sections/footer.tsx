@@ -24,7 +24,7 @@ export const FooterSection = () => {
             <Link href="#" className="flex items-center font-bold">
               <ChevronsDownIcon className="border-secondary from-primary via-primary/70 to-primary mr-2 size-9 rounded-lg border bg-linear-to-tr" />
 
-              <h3 className="text-2xl">Shadcn</h3>
+              <h3 className="text-2xl">SaaS Boilerplate</h3>
             </Link>
           </div>
 
