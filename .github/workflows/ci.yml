@@ -22,7 +22,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: package.json
+          node-version: "22"
           cache: pnpm
 
       - name: Install (frozen lockfile, supply-chain policies enforced)
@@ -49,13 +49,21 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: package.json
+          node-version: "22"
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
 
+      # next lint and next build load next.config.js, which imports src/env.js.
+      # SKIP_ENV_VALIDATION bypasses the real env schema check here since CI has
+      # no .env; `pnpm test` doesn't need it because vitest.config.ts already
+      # injects its own dummy values for the vars tests actually touch.
       - run: pnpm check
+        env:
+          SKIP_ENV_VALIDATION: "1"
 
       - run: pnpm test
 
       - run: pnpm build
+        env:
+          SKIP_ENV_VALIDATION: "1"
