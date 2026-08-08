@@ -6,6 +6,14 @@ export const LOGIN_CODE_LENGTH = 4;
 
 export const LOGIN_CODE_TTL_MINUTES = 10;
 
+/**
+ * How long a freshly sent code must age before another can be requested.
+ *
+ * Short enough that a genuinely lost email isn't punished, long enough that
+ * the inbox doesn't fill with codes that invalidate each other.
+ */
+export const LOGIN_RESEND_COOLDOWN_SECONDS = 30;
+
 export interface OAuthProvider {
   /** Matches the key under `socialProviders` in the Better Auth config. */
   id: "google";
@@ -34,8 +42,24 @@ export const LOGIN_COPY = {
   submitPending: "Sending code",
   helper: `We'll email you a ${LOGIN_CODE_LENGTH}-digit code. No password.`,
   sentTitle: "Check your inbox",
-  sentBody: (email: string) =>
-    `We sent a ${LOGIN_CODE_LENGTH}-digit code to ${email}. It expires in ${LOGIN_CODE_TTL_MINUTES} minutes.`,
+  sentBodyPrefix: `We sent a ${LOGIN_CODE_LENGTH}-digit code to `,
+  sentBodySuffix: `. It expires in ${LOGIN_CODE_TTL_MINUTES} minutes.`,
   sentReset: "Use a different email",
   genericError: "We couldn't send that code. Try again in a moment.",
+  codeLabel: `${LOGIN_CODE_LENGTH}-digit code`,
+  verifySubmit: "Log in",
+  verifySubmitPending: "Verifying",
+  verifyError: "We couldn't verify that code. Try again in a moment.",
+  resendPrompt: "Didn't get a code?",
+  resendAction: "Resend code",
+  resendPending: "Sending",
+  /** Rests in the resend control for as long as the cooldown runs. */
+  resendCooldown: (seconds: number) => `Resend in ${seconds}s`,
+  /**
+   * Announced to assistive technology only. Sighted users read the countdown
+   * as the receipt; a countdown that ticks every second must never be a live
+   * region, so the confirmation is delivered once, here.
+   */
+  resendSuccess: (seconds: number) =>
+    `New code sent. You can request another in ${seconds} seconds.`,
 } as const;

@@ -39,6 +39,27 @@ export async function sendLoginCode(email: string): Promise<void> {
 }
 
 /**
+ * Verifies a login code and completes sign-in.
+ *
+ * To make this real, replace this body with:
+ *
+ * ```ts
+ * const { error } = await authClient.signIn.emailOtp({ email, otp: code });
+ * if (error) throw new Error(error.message);
+ * ```
+ */
+export async function verifyLoginCode(
+  email: string,
+  code: string,
+): Promise<void> {
+  await delay(STUB_LATENCY_MS);
+
+  if (!email || !code) {
+    throw new Error("An email address and code are required.");
+  }
+}
+
+/**
  * Starts an OAuth redirect.
  *
  * Google is already configured in `src/server/better-auth/config.ts`, so this
