@@ -22,6 +22,7 @@ export default defineConfig({
       DATABASE_URL: "postgres://user:password@localhost:5432/test",
       RESEND_API_KEY: "test-resend-api-key",
       EMAIL_FROM: "Test <login@test.example>",
+      NEXT_PUBLIC_CRISP_WEBSITE_ID: "test-crisp-website-id",
     },
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     // `restoreMocks` only reaches spies created with `vi.spyOn`. Module-scope

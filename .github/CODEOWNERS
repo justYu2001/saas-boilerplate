@@ -1,0 +1,5 @@
+# Supply-chain sensitive files require explicit review before merge.
+pnpm-lock.yaml @justYu2001
+pnpm-workspace.yaml @justYu2001
+.npmrc @justYu2001
+package.json @justYu2001

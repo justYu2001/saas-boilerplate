@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  supply-chain:
+    name: Supply chain checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install (frozen lockfile, supply-chain policies enforced)
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit for known vulnerabilities
+        run: pnpm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Dependency review
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4.9.0
+
+  lint-typecheck:
+    name: Lint & typecheck
+    runs-on: ubuntu-latest
+    needs: supply-chain
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # next lint loads next.config.js, which imports src/env.js. SKIP_ENV_VALIDATION
+      # bypasses the real env schema check here since CI has no .env.
+      - run: pnpm check
+        env:
+          SKIP_ENV_VALIDATION: "1"
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: supply-chain
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # No SKIP_ENV_VALIDATION here: vitest.config.ts already injects its own
+      # dummy values for the vars tests actually touch.
+      - run: pnpm test
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: supply-chain
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # `next build` sets NODE_ENV=production, which makes BETTER_AUTH_SECRET
+      # required, and it actually executes route modules while collecting page
+      # data for /api/trpc/[trpc] — so SKIP_ENV_VALIDATION isn't enough here
+      # (it skips the schema check but leaves the vars undefined, and code
+      # further down calls `new URL()` on them). Dummy values instead, same
+      # ones vitest.config.ts already uses for tests.
+      - run: pnpm build
+        env:
+          BETTER_AUTH_URL: "http://localhost:3000"
+          BETTER_AUTH_SECRET: "test-better-auth-secret-32-characters-long"
+          BETTER_AUTH_GOOGLE_CLIENT_ID: "test-client-id"
+          BETTER_AUTH_GOOGLE_CLIENT_SECRET: "test-client-secret"
+          DATABASE_URL: "postgres://user:password@localhost:5432/test"
+          RESEND_API_KEY: "test-resend-api-key"
+          EMAIL_FROM: "Test <login@test.example>"
+          NEXT_PUBLIC_CRISP_WEBSITE_ID: "test-crisp-website-id"
