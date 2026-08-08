@@ -5,9 +5,11 @@ import { Geist } from "next/font/google";
 
 import { CrispChat } from "@/components/crips-chat";
 import { ThemeProvider } from "@/components/layout/theme-provider";
+import { DOMAIN } from "@/constants/domain";
 import { TRPCReactProvider } from "@/trpc/react";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(DOMAIN),
   title: "SaaS Boilerplate - Landing template",
   description: "Free SaaS Boilerplate landing page for developers",
   icons: [{ rel: "icon", url: "/favicon.ico" }],

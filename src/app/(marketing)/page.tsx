@@ -19,6 +19,9 @@ import { DOMAIN } from "@/constants/domain";
 export const metadata: Metadata = {
   title: "SaaS Boilerplate - Landing template",
   description: "Free SaaS Boilerplate landing page for developers",
+  alternates: {
+    canonical: DOMAIN,
+  },
   openGraph: {
     type: "website",
     url: "https://github.com/nobruf/shadcn-landing-page.git",
