@@ -20,8 +20,16 @@ export default defineConfig({
       BETTER_AUTH_GOOGLE_CLIENT_ID: "test-client-id",
       BETTER_AUTH_GOOGLE_CLIENT_SECRET: "test-client-secret",
       DATABASE_URL: "postgres://user:password@localhost:5432/test",
+      RESEND_API_KEY: "test-resend-api-key",
+      EMAIL_FROM: "Test <login@test.example>",
     },
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    // `restoreMocks` only reaches spies created with `vi.spyOn`. Module-scope
+    // `vi.fn()`s from a `vi.mock` factory outlive it, so call history leaks
+    // between tests and any assertion on a call count silently counts the
+    // previous test's work too. `clearMocks` wipes that history; the
+    // implementations each suite sets in its own `beforeEach` still stand.
+    clearMocks: true,
     restoreMocks: true,
     coverage: {
       provider: "v8",
