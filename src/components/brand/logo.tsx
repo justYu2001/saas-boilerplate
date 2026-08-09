@@ -20,9 +20,17 @@ export function Logo({ showWordmark = true, className }: LogoProps) {
     <span className={cn("flex items-center text-lg font-bold", className)}>
       <ChevronsDown
         aria-hidden="true"
-        className="border-secondary from-primary via-primary/70 to-primary mr-2 size-9 rounded-lg border bg-linear-to-tr text-white"
+        // `shrink-0` so a narrow or clipping container squeezes the wordmark
+        // and never the mark itself — a squashed logo is worse than a hidden
+        // one, and the dashboard's collapsed rail is exactly that container.
+        className="border-secondary from-primary via-primary/70 to-primary mr-2 size-9 shrink-0 rounded-lg border bg-linear-to-tr text-white"
       />
-      {showWordmark ? APP_NAME : <span className="sr-only">{APP_NAME}</span>}
+      {/*
+       * Wrapped rather than left as a bare text node so a lockup inside a
+       * collapsing container can address the wordmark on its own — as the
+       * dashboard rail does — without every caller re-deriving the brand.
+       */}
+      <span className={showWordmark ? undefined : "sr-only"}>{APP_NAME}</span>
     </span>
   );
 }
