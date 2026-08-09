@@ -1,6 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { LOGIN_REDIRECT_PATH } from "@/constants/auth";
 import { cancelOneTap, promptOneTap } from "@/lib/auth/one-tap";
 
 import { GoogleOneTap } from "./google-one-tap";
@@ -23,9 +24,10 @@ vi.mock("@/server/better-auth/client", () => ({
 }));
 
 const routerRefresh = vi.fn();
+const routerPush = vi.fn();
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ refresh: routerRefresh }),
+  useRouter: () => ({ refresh: routerRefresh, push: routerPush }),
 }));
 
 const promptOneTapMock = vi.mocked(promptOneTap);
@@ -72,7 +74,16 @@ describe("GoogleOneTap", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("should refresh the page once a sign-in lands, so server components re-render with the session", async () => {
+  it("should send a signed-in visitor to the same place the login page does", async () => {
+    render(<GoogleOneTap />);
+
+    await waitFor(() => expect(promptOneTapMock).toHaveBeenCalled());
+    promptOneTapMock.mock.calls[0]?.[0]?.onSignedIn();
+
+    expect(routerPush).toHaveBeenCalledWith(LOGIN_REDIRECT_PATH);
+  });
+
+  it("should refresh once a sign-in lands, so server components re-render with the session", async () => {
     render(<GoogleOneTap />);
 
     await waitFor(() => expect(promptOneTapMock).toHaveBeenCalled());

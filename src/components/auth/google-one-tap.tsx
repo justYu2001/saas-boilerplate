@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+import { LOGIN_REDIRECT_PATH } from "@/constants/auth";
 import { cancelOneTap, promptOneTap } from "@/lib/auth/one-tap";
 import { authClient } from "@/server/better-auth/client";
 
@@ -39,10 +40,17 @@ export function GoogleOneTap() {
     void promptOneTap({
       onSignedIn: () => {
         /*
-         * Already on the destination, so there is nowhere to navigate — but
-         * the server components on screen were rendered for a stranger. This
-         * re-renders them against the session cookie the callback just set.
+         * One Tap is a shortcut through the login page, so it has to land
+         * where the login page lands. Staying put would make the fast route
+         * the only one that leaves the user outside the product.
+         *
+         * `push`, not `replace`: unlike the login page, the marketing page
+         * behind the prompt is somewhere a signed-in user may legitimately go
+         * back to. `refresh` then discards the server render taken before the
+         * session cookie existed, so both this page and the destination are
+         * rendered as the logged-in user rather than as a stranger.
          */
+        router.push(LOGIN_REDIRECT_PATH);
         router.refresh();
       },
       onDismissed: (notification) => {
