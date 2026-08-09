@@ -52,6 +52,29 @@ export const LOGIN_CODE_SEND_RATE_LIMIT = {
  */
 export const LOGIN_REDIRECT_PATH = "/";
 
+/** The single authentication entry point every marketing CTA points at. */
+export const LOGIN_PATH = "/login";
+
+/**
+ * The two marketing entrances to {@link LOGIN_PATH}.
+ *
+ * Both lead to the same page because there is only one page to lead to:
+ * `disableSignUp` is left at its default in the Better Auth config, so a
+ * first-time address gets an account on the way through the code flow and no
+ * separate sign-up route exists. The pair is a copy decision, not a routing
+ * one — returning and first-time visitors scan the header for different words,
+ * and a lone "Log in" reads as members-only to someone who has never been
+ * here, which turns them away from a door that would have let them in.
+ *
+ * A fork that sets `disableSignUp: true` should drop {@link AUTH_NAV_COPY.signUp}
+ * along with it; inviting someone to get started is a lie once the send
+ * endpoint stops creating accounts.
+ */
+export const AUTH_NAV_COPY = {
+  logIn: "Log in",
+  signUp: "Get started",
+} as const;
+
 export interface OAuthProvider {
   /** Matches the key under `socialProviders` in the Better Auth config. */
   id: "google";
@@ -71,8 +94,14 @@ export const OAUTH_PROVIDERS: readonly OAuthProvider[] = [
  * Kept in one place so a fork can rebrand the surface without touching markup.
  */
 export const LOGIN_COPY = {
-  title: "Log in to your account",
-  subtitle: "Pick up where you left off. No password required.",
+  /*
+   * Names both audiences on purpose. This page creates accounts as readily as
+   * it opens them — see the note on {@link AUTH_NAV_COPY} — so a title that
+   * addressed only returning users would be telling a first-time visitor they
+   * were in the wrong place while quietly signing them up.
+   */
+  title: "Log in or create your account",
+  subtitle: "New or returning, the same code gets you in.",
   dividerLabel: "or",
   emailLabel: "Email",
   emailPlaceholder: "you@domain.com",

@@ -18,10 +18,12 @@ import {
 import {
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { AUTH_NAV_COPY, LOGIN_PATH } from "@/constants/auth";
 
 interface RouteProps {
   href: string;
@@ -105,6 +107,34 @@ export const Navbar = () => {
                 ))}
               </div>
             </div>
+
+            {/*
+              Order is inverted against the desktop header: there the primary
+              CTA sits last because the eye finishes a row on the right, here
+              it sits last because the thumb rests at the bottom of the sheet.
+            */}
+            <SheetFooter>
+              <Button
+                onClick={() => setIsOpen(false)}
+                render={<Link href={LOGIN_PATH} />}
+                nativeButton={false}
+                variant="outline"
+                size="lg"
+                className="text-base"
+              >
+                {AUTH_NAV_COPY.logIn}
+              </Button>
+
+              <Button
+                onClick={() => setIsOpen(false)}
+                render={<Link href={LOGIN_PATH} />}
+                nativeButton={false}
+                size="lg"
+                className="text-base"
+              >
+                {AUTH_NAV_COPY.signUp}
+              </Button>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </div>
@@ -156,6 +186,34 @@ export const Navbar = () => {
           ))}
         </NavigationMenuList>
       </NavigationMenu>
+
+      {/*
+        Two labels, one destination — a first-time visitor needs to see that
+        this product will make them an account, and "Log in" alone never says
+        so. Both stay text, so the filled orange is spent once per viewport on
+        the hero's call to action rather than twice on the same one.
+      */}
+      <div className="hidden items-center gap-1 lg:flex">
+        <Button
+          render={<Link href={LOGIN_PATH} />}
+          nativeButton={false}
+          variant="ghost"
+          size="lg"
+          className="text-base"
+        >
+          {AUTH_NAV_COPY.logIn}
+        </Button>
+
+        <Button
+          render={<Link href={LOGIN_PATH} />}
+          nativeButton={false}
+          variant="ghost"
+          size="lg"
+          className="text-base"
+        >
+          {AUTH_NAV_COPY.signUp}
+        </Button>
+      </div>
     </header>
   );
 };

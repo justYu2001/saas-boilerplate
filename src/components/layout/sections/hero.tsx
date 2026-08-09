@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AUTH_NAV_COPY, LOGIN_PATH } from "@/constants/auth";
 
 export const HeroSection = () => {
   return (
@@ -33,8 +34,13 @@ export const HeroSection = () => {
           </p>
 
           <div className="space-y-4 md:space-y-0 md:space-x-4">
-            <Button size="lg" className="group/arrow w-5/6 font-bold md:w-1/4">
-              Get Started
+            <Button
+              render={<Link href={LOGIN_PATH} />}
+              nativeButton={false}
+              size="lg"
+              className="group/arrow w-5/6 font-bold md:w-1/4"
+            >
+              {AUTH_NAV_COPY.signUp}
               <ArrowRight className="ml-2 size-5 transition-transform group-hover/arrow:translate-x-1" />
             </Button>
 
@@ -67,7 +73,7 @@ export const HeroSection = () => {
             width={1200}
             height={1200}
             priority
-            className="border-secondary border-t-primary/30 relative mx-auto flex w-full items-center rounded-lg border border-t-2 leading-none md:w-300 dark:hidden"
+            className="border-secondary border-t-primary/30 relative mx-auto flex w-full items-center rounded-lg border leading-none md:w-300 dark:hidden"
             src="/hero-image-light.jpeg"
             alt="Dashboard preview"
           />
@@ -75,7 +81,7 @@ export const HeroSection = () => {
             width={1200}
             height={1200}
             priority
-            className="border-secondary border-t-primary/30 relative mx-auto hidden w-full items-center rounded-lg border border-t-2 leading-none md:w-300 dark:flex"
+            className="border-secondary border-t-primary/30 relative mx-auto hidden w-full items-center rounded-lg border leading-none md:w-300 dark:flex"
             src="/hero-image-dark.jpeg"
             alt="Dashboard preview"
           />
