@@ -11,7 +11,7 @@ name: saas-boilerplate
 # `drizzle-orm/neon-http`). `db.localtest.me` resolves to 127.0.0.1.
 services:
   postgres:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
