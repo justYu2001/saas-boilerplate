@@ -19,7 +19,11 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    BETTER_AUTH_GOOGLE_CLIENT_ID: z.string(),
+    /**
+     * Pairs with `NEXT_PUBLIC_GOOGLE_CLIENT_ID` in the client block below. The
+     * ID is public and lives there so the browser can read it; the secret is
+     * what actually protects the flow and never leaves the server.
+     */
     BETTER_AUTH_GOOGLE_CLIENT_SECRET: z.string(),
     DATABASE_URL: z.url(),
     RESEND_API_KEY: z.string().min(1),
@@ -46,6 +50,22 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_CRISP_WEBSITE_ID: z.string(),
+    /**
+     * The Google OAuth client ID, used by both sign-in routes.
+     *
+     * It sits in the client block, not the server one, because Google One Tap
+     * runs entirely in the browser: the Google Identity Services script needs
+     * the ID before any request reaches our server. A client ID is public by
+     * design — it already travels in the query string of every OAuth redirect
+     * the sign-in button performs — so exposing it costs nothing.
+     *
+     * Server code reads it from here too. `@t3-oss/env-nextjs` guards only the
+     * dangerous direction: server variables are unreadable on the client, while
+     * client variables are validated into the server schema and available on
+     * both sides. One variable therefore serves both, and there is no second
+     * copy to drift out of sync.
+     */
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID: z.string(),
   },
 
   /**
@@ -55,7 +75,6 @@ export const env = createEnv({
   runtimeEnv: {
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-    BETTER_AUTH_GOOGLE_CLIENT_ID: process.env.BETTER_AUTH_GOOGLE_CLIENT_ID,
     BETTER_AUTH_GOOGLE_CLIENT_SECRET:
       process.env.BETTER_AUTH_GOOGLE_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
@@ -63,6 +82,7 @@ export const env = createEnv({
     EMAIL_FROM: process.env.EMAIL_FROM,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_CRISP_WEBSITE_ID: process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID,
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

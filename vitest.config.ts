@@ -17,12 +17,12 @@ export default defineConfig({
     // Backend tests use PGlite (see `src/server/db/test-db.ts`) instead of `DATABASE_URL`.
     env: {
       BETTER_AUTH_URL: "http://localhost:3000",
-      BETTER_AUTH_GOOGLE_CLIENT_ID: "test-client-id",
       BETTER_AUTH_GOOGLE_CLIENT_SECRET: "test-client-secret",
       DATABASE_URL: "postgres://user:password@localhost:5432/test",
       RESEND_API_KEY: "test-resend-api-key",
       EMAIL_FROM: "Test <login@test.example>",
       NEXT_PUBLIC_CRISP_WEBSITE_ID: "test-crisp-website-id",
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: "test-client-id",
     },
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     // `restoreMocks` only reaches spies created with `vi.spyOn`. Module-scope

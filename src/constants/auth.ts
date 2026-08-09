@@ -75,6 +75,19 @@ export const AUTH_NAV_COPY = {
   signUp: "Get started",
 } as const;
 
+/**
+ * How many times the One Tap prompt may be re-attempted before the client
+ * gives up and reports through `onPromptNotification`.
+ *
+ * Lower than Better Auth's default of five. A retry only happens for reasons
+ * the user did not choose — an explicit dismissal or a tap outside stops the
+ * sequence immediately — but each one waits an exponentially longer delay, so
+ * a high ceiling means a prompt that can still appear well over a minute after
+ * the landing page settled. Two attempts covers the transient cases without
+ * letting the prompt ambush someone who has started reading.
+ */
+export const ONE_TAP_MAX_PROMPT_ATTEMPTS = 2;
+
 export interface OAuthProvider {
   /** Matches the key under `socialProviders` in the Better Auth config. */
   id: "google";
