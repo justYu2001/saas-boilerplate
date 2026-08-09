@@ -24,6 +24,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { AUTH_NAV_COPY, LOGIN_PATH } from "@/constants/auth";
+import { authClient } from "@/server/better-auth/client";
 
 interface RouteProps {
   href: string;
@@ -61,6 +62,25 @@ const featureList: FeatureProps[] = [
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const { data: session, isPending } = authClient.useSession();
+
+  /*
+   * Both entrances lead to `/login`, so both are wrong once someone is already
+   * through the door — hiding only "Log in" would leave a signed-in user being
+   * invited to get started with an account they have.
+   *
+   * The pending beat is spent showing nothing rather than showing the buttons
+   * optimistically. Reading the session costs a request, and the two mistakes
+   * that wait at the end of it are not equal: a signed-out visitor watches the
+   * buttons arrive a moment late, while an optimistic header would tell a
+   * signed-in user to log in and then snatch the offer back. The first is a
+   * beat of quiet, the second is a lie.
+   *
+   * Client-side on purpose, like `@/components/auth/google-one-tap` — see the
+   * note there. Reading the session on the server would make every marketing
+   * page dynamic to decide the state of two buttons.
+   */
+  const showAuthActions = !isPending && !session;
 
   return (
     <header className="border-secondary bg-card sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between rounded-2xl border p-2 inset-shadow-sm md:w-[70%] lg:w-[75%] lg:max-w-(--breakpoint-xl)">
@@ -113,28 +133,30 @@ export const Navbar = () => {
               CTA sits last because the eye finishes a row on the right, here
               it sits last because the thumb rests at the bottom of the sheet.
             */}
-            <SheetFooter>
-              <Button
-                onClick={() => setIsOpen(false)}
-                render={<Link href={LOGIN_PATH} />}
-                nativeButton={false}
-                variant="outline"
-                size="lg"
-                className="text-base"
-              >
-                {AUTH_NAV_COPY.logIn}
-              </Button>
+            {showAuthActions && (
+              <SheetFooter>
+                <Button
+                  onClick={() => setIsOpen(false)}
+                  render={<Link href={LOGIN_PATH} />}
+                  nativeButton={false}
+                  variant="outline"
+                  size="lg"
+                  className="text-base"
+                >
+                  {AUTH_NAV_COPY.logIn}
+                </Button>
 
-              <Button
-                onClick={() => setIsOpen(false)}
-                render={<Link href={LOGIN_PATH} />}
-                nativeButton={false}
-                size="lg"
-                className="text-base"
-              >
-                {AUTH_NAV_COPY.signUp}
-              </Button>
-            </SheetFooter>
+                <Button
+                  onClick={() => setIsOpen(false)}
+                  render={<Link href={LOGIN_PATH} />}
+                  nativeButton={false}
+                  size="lg"
+                  className="text-base"
+                >
+                  {AUTH_NAV_COPY.signUp}
+                </Button>
+              </SheetFooter>
+            )}
           </SheetContent>
         </Sheet>
       </div>
@@ -193,27 +215,29 @@ export const Navbar = () => {
         so. Both stay text, so the filled orange is spent once per viewport on
         the hero's call to action rather than twice on the same one.
       */}
-      <div className="hidden items-center gap-1 lg:flex">
-        <Button
-          render={<Link href={LOGIN_PATH} />}
-          nativeButton={false}
-          variant="ghost"
-          size="lg"
-          className="text-base"
-        >
-          {AUTH_NAV_COPY.logIn}
-        </Button>
+      {showAuthActions && (
+        <div className="hidden items-center gap-1 lg:flex">
+          <Button
+            render={<Link href={LOGIN_PATH} />}
+            nativeButton={false}
+            variant="ghost"
+            size="lg"
+            className="text-base"
+          >
+            {AUTH_NAV_COPY.logIn}
+          </Button>
 
-        <Button
-          render={<Link href={LOGIN_PATH} />}
-          nativeButton={false}
-          variant="ghost"
-          size="lg"
-          className="text-base"
-        >
-          {AUTH_NAV_COPY.signUp}
-        </Button>
-      </div>
+          <Button
+            render={<Link href={LOGIN_PATH} />}
+            nativeButton={false}
+            variant="ghost"
+            size="lg"
+            className="text-base"
+          >
+            {AUTH_NAV_COPY.signUp}
+          </Button>
+        </div>
+      )}
     </header>
   );
 };
