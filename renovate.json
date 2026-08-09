@@ -4,8 +4,15 @@
     "config:best-practices"
   ],
   "minimumReleaseAge": "3 days",
+  "packageRules": [
+    {
+      "matchConfidence": ["low"],
+      "dependencyDashboardApproval": true
+    }
+  ],
   "vulnerabilityAlerts": {
     "minimumReleaseAge": null,
+    "dependencyDashboardApproval": false,
     "labels": ["security"]
   }
 }
