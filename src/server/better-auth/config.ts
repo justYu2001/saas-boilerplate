@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { emailOTP } from "better-auth/plugins";
+import { emailOTP, oneTap } from "better-auth/plugins";
 
 import {
   LOGIN_CODE_LENGTH,
@@ -83,6 +83,22 @@ export const auth = betterAuth({
         }
       },
     }),
+    /*
+     * Google One Tap. Takes no options here on purpose: it falls back to
+     * `socialProviders.google.clientId` above as the audience it checks the id
+     * token against, so the two can never drift apart.
+     *
+     * This adds an endpoint, not a second identity. The token is verified
+     * against Google's public keys and then handed to the same account-linking
+     * path the redirect button uses, under `providerId: "google"` — so a
+     * visitor who first signed in with an emailed code lands back on their
+     * existing row rather than a duplicate. That linking depends on the local
+     * account already being email-verified, which the `emailOTP` flow above
+     * guarantees.
+     *
+     * Nothing to generate: no new table, no new column.
+     */
+    oneTap(),
     // Required so cookies set by auth.api.* calls (e.g. signInSocial in
     // server actions) actually reach the browser via next/headers — without
     // this, the OAuth state cookie never gets set and the callback fails

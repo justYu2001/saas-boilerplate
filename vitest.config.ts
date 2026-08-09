@@ -23,6 +23,7 @@ export default defineConfig({
       RESEND_API_KEY: "test-resend-api-key",
       EMAIL_FROM: "Test <login@test.example>",
       NEXT_PUBLIC_CRISP_WEBSITE_ID: "test-crisp-website-id",
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: "test-client-id",
     },
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     // `restoreMocks` only reaches spies created with `vi.spyOn`. Module-scope

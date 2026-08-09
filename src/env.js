@@ -46,6 +46,22 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_CRISP_WEBSITE_ID: z.string(),
+    /**
+     * The same value as `BETTER_AUTH_GOOGLE_CLIENT_ID`, deliberately duplicated
+     * rather than derived.
+     *
+     * Google One Tap runs entirely in the browser: the Google Identity Services
+     * script needs the client ID before any request reaches our server, so it
+     * cannot be read from the server-only variable. A client ID is public by
+     * design — it travels in the query string of every OAuth redirect the
+     * existing button already performs — so exposing it costs nothing. The
+     * secret stays server-side and is what actually protects the flow.
+     *
+     * Keep the two in sync. They are validated separately, so a mismatch is not
+     * a boot failure: One Tap simply returns an id token whose `aud` claim the
+     * server then rejects.
+     */
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID: z.string(),
   },
 
   /**
@@ -63,6 +79,7 @@ export const env = createEnv({
     EMAIL_FROM: process.env.EMAIL_FROM,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_CRISP_WEBSITE_ID: process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID,
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

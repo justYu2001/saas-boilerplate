@@ -1,6 +1,7 @@
 import { type Metadata } from "next";
 import type { Graph, Person, SoftwareApplication, WebSite } from "schema-dts";
 
+import { GoogleOneTap } from "@/components/auth/google-one-tap";
 import { JsonLd } from "@/components/json-ld";
 import { BenefitsSection } from "@/components/layout/sections/benefits";
 import { CommunitySection } from "@/components/layout/sections/community";
@@ -81,6 +82,14 @@ export default function Home() {
   return (
     <>
       <JsonLd data={homeSchema} />
+
+      {/*
+        Home only, and only here. The prompt is deliberately absent from the
+        login page — where it would duplicate the Google button already on
+        offer — and from every other marketing route a fork adds later. See the
+        component for why that is placement rather than configuration.
+      */}
+      <GoogleOneTap />
 
       <HeroSection />
       <SponsorsSection />
