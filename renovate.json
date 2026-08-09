@@ -6,7 +6,7 @@
   "minimumReleaseAge": "3 days",
   "packageRules": [
     {
-      "matchConfidence": ["low"],
+      "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
     }
   ],
