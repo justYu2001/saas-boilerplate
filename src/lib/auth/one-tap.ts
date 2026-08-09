@@ -50,10 +50,9 @@ interface PromptOneTapOptions {
  * feature is broken rather than declined.
  *
  * No `callbackURL` is passed. Supplying one makes Better Auth finish with
- * `window.location.href`, a full document load — wasteful here, since the
- * prompt only ever runs on the page it would be reloading. Passing
- * `fetchOptions` is what suppresses that redirect, leaving the caller to
- * re-render however it likes.
+ * `window.location.href`, a full document load that throws away the app the
+ * browser already has. Passing `fetchOptions` is what suppresses that
+ * redirect, leaving the caller to navigate or re-render however it likes.
  */
 export async function promptOneTap({
   onSignedIn,
