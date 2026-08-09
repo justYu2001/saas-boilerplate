@@ -19,7 +19,11 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    BETTER_AUTH_GOOGLE_CLIENT_ID: z.string(),
+    /**
+     * Pairs with `NEXT_PUBLIC_GOOGLE_CLIENT_ID` in the client block below. The
+     * ID is public and lives there so the browser can read it; the secret is
+     * what actually protects the flow and never leaves the server.
+     */
     BETTER_AUTH_GOOGLE_CLIENT_SECRET: z.string(),
     DATABASE_URL: z.url(),
     RESEND_API_KEY: z.string().min(1),
@@ -47,19 +51,19 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_CRISP_WEBSITE_ID: z.string(),
     /**
-     * The same value as `BETTER_AUTH_GOOGLE_CLIENT_ID`, deliberately duplicated
-     * rather than derived.
+     * The Google OAuth client ID, used by both sign-in routes.
      *
-     * Google One Tap runs entirely in the browser: the Google Identity Services
-     * script needs the client ID before any request reaches our server, so it
-     * cannot be read from the server-only variable. A client ID is public by
-     * design — it travels in the query string of every OAuth redirect the
-     * existing button already performs — so exposing it costs nothing. The
-     * secret stays server-side and is what actually protects the flow.
+     * It sits in the client block, not the server one, because Google One Tap
+     * runs entirely in the browser: the Google Identity Services script needs
+     * the ID before any request reaches our server. A client ID is public by
+     * design — it already travels in the query string of every OAuth redirect
+     * the sign-in button performs — so exposing it costs nothing.
      *
-     * Keep the two in sync. They are validated separately, so a mismatch is not
-     * a boot failure: One Tap simply returns an id token whose `aud` claim the
-     * server then rejects.
+     * Server code reads it from here too. `@t3-oss/env-nextjs` guards only the
+     * dangerous direction: server variables are unreadable on the client, while
+     * client variables are validated into the server schema and available on
+     * both sides. One variable therefore serves both, and there is no second
+     * copy to drift out of sync.
      */
     NEXT_PUBLIC_GOOGLE_CLIENT_ID: z.string(),
   },
@@ -71,7 +75,6 @@ export const env = createEnv({
   runtimeEnv: {
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-    BETTER_AUTH_GOOGLE_CLIENT_ID: process.env.BETTER_AUTH_GOOGLE_CLIENT_ID,
     BETTER_AUTH_GOOGLE_CLIENT_SECRET:
       process.env.BETTER_AUTH_GOOGLE_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,

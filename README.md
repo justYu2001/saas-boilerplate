@@ -72,18 +72,19 @@ http://localhost
 Then copy the credentials into `.env`:
 
 ```bash
-BETTER_AUTH_GOOGLE_CLIENT_ID=""      # the client ID
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=""      # the client ID
 BETTER_AUTH_GOOGLE_CLIENT_SECRET=""  # the client secret
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=""      # the same client ID again — see below
 ```
 
-The client ID appears twice on purpose. One Tap runs entirely in the browser
-and needs the ID before any request reaches the server, so it cannot read the
-server-only variable. A client ID is public by design — it already travels in
-the query string of every OAuth redirect — so exposing it costs nothing, while
-the secret stays server-side. **Keep the two in sync.** They are validated
-separately, so a mismatch is not a boot failure: One Tap simply returns a token
-whose audience the server then rejects.
+The client ID carries the `NEXT_PUBLIC_` prefix because One Tap runs entirely
+in the browser and needs the ID before any request reaches the server. A client
+ID is public by design — it already travels in the query string of every OAuth
+redirect — so exposing it costs nothing, while the secret stays server-side.
+
+Server code reads that same variable. `@t3-oss/env-nextjs` guards only the
+dangerous direction: server variables are unreadable on the client, while
+client variables are available to both. So one variable serves both sign-in
+routes, with no second copy to fall out of sync.
 
 After saving changes in the Google Console, **allow time for them to
 propagate** — Google documents anywhere from 5 minutes to a few hours. Retesting
