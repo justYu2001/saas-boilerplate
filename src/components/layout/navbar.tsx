@@ -24,6 +24,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { AUTH_NAV_COPY, LOGIN_PATH } from "@/constants/auth";
+import { DASHBOARD_PATH } from "@/constants/dashboard";
 import { authClient } from "@/server/better-auth/client";
 
 interface RouteProps {
@@ -65,22 +66,27 @@ export const Navbar = () => {
   const { data: session, isPending } = authClient.useSession();
 
   /*
-   * Both entrances lead to `/login`, so both are wrong once someone is already
-   * through the door — hiding only "Log in" would leave a signed-in user being
-   * invited to get started with an account they have.
+   * The marketing pages stay open to everyone, signed in or not, so the header
+   * changes what it offers rather than who it lets past.
    *
-   * The pending beat is spent showing nothing rather than showing the buttons
-   * optimistically. Reading the session costs a request, and the two mistakes
-   * that wait at the end of it are not equal: a signed-out visitor watches the
-   * buttons arrive a moment late, while an optimistic header would tell a
-   * signed-in user to log in and then snatch the offer back. The first is a
-   * beat of quiet, the second is a lie.
+   * "Log in" is the only control that goes away: it is the one word that is
+   * simply untrue for someone already signed in. "Get started" survives both
+   * states because it always means the same thing — take me into the product —
+   * and only its destination moves, from the login page to the dashboard.
+   *
+   * The pending beat is spent showing nothing rather than guessing. Reading the
+   * session costs a request, and the two mistakes that wait at the end of it
+   * are not equal: a visitor watches the buttons arrive a moment late, while an
+   * optimistic header would send a signed-in user to the login page. The first
+   * is a beat of quiet, the second is a wrong door.
    *
    * Client-side on purpose, like `@/components/auth/google-one-tap` — see the
    * note there. Reading the session on the server would make every marketing
    * page dynamic to decide the state of two buttons.
    */
-  const showAuthActions = !isPending && !session;
+  const isSessionResolved = !isPending;
+  const isSignedIn = Boolean(session);
+  const enterHref = isSignedIn ? DASHBOARD_PATH : LOGIN_PATH;
 
   return (
     <header className="border-secondary bg-card sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between rounded-2xl border p-2 inset-shadow-sm md:w-[70%] lg:w-[75%] lg:max-w-(--breakpoint-xl)">
@@ -133,22 +139,24 @@ export const Navbar = () => {
               CTA sits last because the eye finishes a row on the right, here
               it sits last because the thumb rests at the bottom of the sheet.
             */}
-            {showAuthActions && (
+            {isSessionResolved && (
               <SheetFooter>
-                <Button
-                  onClick={() => setIsOpen(false)}
-                  render={<Link href={LOGIN_PATH} />}
-                  nativeButton={false}
-                  variant="outline"
-                  size="lg"
-                  className="text-base"
-                >
-                  {AUTH_NAV_COPY.logIn}
-                </Button>
+                {!isSignedIn && (
+                  <Button
+                    onClick={() => setIsOpen(false)}
+                    render={<Link href={LOGIN_PATH} />}
+                    nativeButton={false}
+                    variant="outline"
+                    size="lg"
+                    className="text-base"
+                  >
+                    {AUTH_NAV_COPY.logIn}
+                  </Button>
+                )}
 
                 <Button
                   onClick={() => setIsOpen(false)}
-                  render={<Link href={LOGIN_PATH} />}
+                  render={<Link href={enterHref} />}
                   nativeButton={false}
                   size="lg"
                   className="text-base"
@@ -210,25 +218,29 @@ export const Navbar = () => {
       </NavigationMenu>
 
       {/*
-        Two labels, one destination — a first-time visitor needs to see that
-        this product will make them an account, and "Log in" alone never says
-        so. Both stay text, so the filled orange is spent once per viewport on
-        the hero's call to action rather than twice on the same one.
+        Signed out, two labels share one destination — a first-time visitor
+        needs to see that this product will make them an account, and "Log in"
+        alone never says so. Signed in, one label remains and its destination
+        becomes the dashboard. Both stay text, so the filled orange is spent
+        once per viewport on the hero's call to action rather than twice on the
+        same one.
       */}
-      {showAuthActions && (
+      {isSessionResolved && (
         <div className="hidden items-center gap-1 lg:flex">
-          <Button
-            render={<Link href={LOGIN_PATH} />}
-            nativeButton={false}
-            variant="ghost"
-            size="lg"
-            className="text-base"
-          >
-            {AUTH_NAV_COPY.logIn}
-          </Button>
+          {!isSignedIn && (
+            <Button
+              render={<Link href={LOGIN_PATH} />}
+              nativeButton={false}
+              variant="ghost"
+              size="lg"
+              className="text-base"
+            >
+              {AUTH_NAV_COPY.logIn}
+            </Button>
+          )}
 
           <Button
-            render={<Link href={LOGIN_PATH} />}
+            render={<Link href={enterHref} />}
             nativeButton={false}
             variant="ghost"
             size="lg"

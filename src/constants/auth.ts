@@ -1,6 +1,7 @@
 import type * as React from "react";
 
 import GoogleIcon from "@/components/icons/google-icon";
+import { DASHBOARD_PATH } from "@/constants/dashboard";
 
 export const LOGIN_CODE_LENGTH = 4;
 
@@ -46,29 +47,35 @@ export const LOGIN_CODE_SEND_RATE_LIMIT = {
 } as const;
 
 /**
- * Where a successful login lands. There is no app shell in the boilerplate
- * yet, so the marketing home page stands in — point this at the real
- * post-login surface as soon as one exists.
+ * Where a successful login lands.
+ *
+ * Re-exported from {@link DASHBOARD_PATH} rather than spelled out, so moving
+ * the app shell moves the redirect with it.
  */
-export const LOGIN_REDIRECT_PATH = "/";
+export const LOGIN_REDIRECT_PATH = DASHBOARD_PATH;
 
 /** The single authentication entry point every marketing CTA points at. */
 export const LOGIN_PATH = "/login";
 
 /**
- * The two marketing entrances to {@link LOGIN_PATH}.
+ * The two marketing entrances into the product.
  *
- * Both lead to the same page because there is only one page to lead to:
- * `disableSignUp` is left at its default in the Better Auth config, so a
- * first-time address gets an account on the way through the code flow and no
- * separate sign-up route exists. The pair is a copy decision, not a routing
+ * Signed out, both lead to {@link LOGIN_PATH}, because there is only one page
+ * to lead to: `disableSignUp` is left at its default in the Better Auth config,
+ * so a first-time address gets an account on the way through the code flow and
+ * no separate sign-up route exists. The pair is a copy decision, not a routing
  * one — returning and first-time visitors scan the header for different words,
  * and a lone "Log in" reads as members-only to someone who has never been
  * here, which turns them away from a door that would have let them in.
  *
- * A fork that sets `disableSignUp: true` should drop {@link AUTH_NAV_COPY.signUp}
- * along with it; inviting someone to get started is a lie once the send
- * endpoint stops creating accounts.
+ * Signed in, {@link AUTH_NAV_COPY.logIn} is dropped and
+ * {@link AUTH_NAV_COPY.signUp} re-points at {@link LOGIN_REDIRECT_PATH}. The
+ * label survives the state change because it never described the account, only
+ * the intent: get me into the product. See `@/components/layout/navbar`.
+ *
+ * A fork that sets `disableSignUp: true` should reword
+ * {@link AUTH_NAV_COPY.signUp} for its signed-out state; inviting a stranger to
+ * get started is a lie once the send endpoint stops creating accounts.
  */
 export const AUTH_NAV_COPY = {
   logIn: "Log in",
