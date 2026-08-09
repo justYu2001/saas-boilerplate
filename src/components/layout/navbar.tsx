@@ -25,7 +25,14 @@ import {
 } from "@/components/ui/sheet";
 import { AUTH_NAV_COPY, LOGIN_PATH } from "@/constants/auth";
 import { DASHBOARD_PATH } from "@/constants/dashboard";
-import { authClient } from "@/server/better-auth/client";
+
+interface NavbarProps {
+  /**
+   * Whether the visitor holds a session, decided on the server before this
+   * markup was sent. See `@/app/(marketing)/layout` for where it comes from.
+   */
+  isSignedIn: boolean;
+}
 
 interface RouteProps {
   href: string;
@@ -61,9 +68,8 @@ const featureList: FeatureProps[] = [
   },
 ];
 
-export const Navbar = () => {
+export const Navbar = ({ isSignedIn }: NavbarProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const { data: session, isPending } = authClient.useSession();
 
   /*
    * The marketing pages stay open to everyone, signed in or not, so the header
@@ -74,18 +80,18 @@ export const Navbar = () => {
    * states because it always means the same thing — take me into the product —
    * and only its destination moves, from the login page to the dashboard.
    *
-   * The pending beat is spent showing nothing rather than guessing. Reading the
-   * session costs a request, and the two mistakes that wait at the end of it
-   * are not equal: a visitor watches the buttons arrive a moment late, while an
-   * optimistic header would send a signed-in user to the login page. The first
-   * is a beat of quiet, the second is a wrong door.
+   * Which state to draw is settled on the server, so both controls arrive in
+   * the first HTML already pointing at the right door. This component stays a
+   * client one for the mobile sheet's open state, not for the session: nothing
+   * here waits on a session request, so there is no pending beat to spend
+   * showing an empty header and no signed-in visitor watching "Log in" appear
+   * and then be taken back.
    *
-   * Client-side on purpose, like `@/components/auth/google-one-tap` — see the
-   * note there. Reading the session on the server would make every marketing
-   * page dynamic to decide the state of two buttons.
+   * The prop is a snapshot of the request, not a subscription. A sign-in that
+   * happens on the page — One Tap on the home page is the only one — leaves it
+   * stale, which is why `@/components/auth/google-one-tap` follows its success
+   * with a `router.refresh()` on the way to the dashboard.
    */
-  const isSessionResolved = !isPending;
-  const isSignedIn = Boolean(session);
   const enterHref = isSignedIn ? DASHBOARD_PATH : LOGIN_PATH;
 
   return (
@@ -139,32 +145,30 @@ export const Navbar = () => {
               CTA sits last because the eye finishes a row on the right, here
               it sits last because the thumb rests at the bottom of the sheet.
             */}
-            {isSessionResolved && (
-              <SheetFooter>
-                {!isSignedIn && (
-                  <Button
-                    onClick={() => setIsOpen(false)}
-                    render={<Link href={LOGIN_PATH} />}
-                    nativeButton={false}
-                    variant="outline"
-                    size="lg"
-                    className="text-base"
-                  >
-                    {AUTH_NAV_COPY.logIn}
-                  </Button>
-                )}
-
+            <SheetFooter>
+              {!isSignedIn && (
                 <Button
                   onClick={() => setIsOpen(false)}
-                  render={<Link href={enterHref} />}
+                  render={<Link href={LOGIN_PATH} />}
                   nativeButton={false}
+                  variant="outline"
                   size="lg"
                   className="text-base"
                 >
-                  {AUTH_NAV_COPY.signUp}
+                  {AUTH_NAV_COPY.logIn}
                 </Button>
-              </SheetFooter>
-            )}
+              )}
+
+              <Button
+                onClick={() => setIsOpen(false)}
+                render={<Link href={enterHref} />}
+                nativeButton={false}
+                size="lg"
+                className="text-base"
+              >
+                {AUTH_NAV_COPY.signUp}
+              </Button>
+            </SheetFooter>
           </SheetContent>
         </Sheet>
       </div>
@@ -225,31 +229,29 @@ export const Navbar = () => {
         once per viewport on the hero's call to action rather than twice on the
         same one.
       */}
-      {isSessionResolved && (
-        <div className="hidden items-center gap-1 lg:flex">
-          {!isSignedIn && (
-            <Button
-              render={<Link href={LOGIN_PATH} />}
-              nativeButton={false}
-              variant="ghost"
-              size="lg"
-              className="text-base"
-            >
-              {AUTH_NAV_COPY.logIn}
-            </Button>
-          )}
-
+      <div className="hidden items-center gap-1 lg:flex">
+        {!isSignedIn && (
           <Button
-            render={<Link href={enterHref} />}
+            render={<Link href={LOGIN_PATH} />}
             nativeButton={false}
             variant="ghost"
             size="lg"
             className="text-base"
           >
-            {AUTH_NAV_COPY.signUp}
+            {AUTH_NAV_COPY.logIn}
           </Button>
-        </div>
-      )}
+        )}
+
+        <Button
+          render={<Link href={enterHref} />}
+          nativeButton={false}
+          variant="ghost"
+          size="lg"
+          className="text-base"
+        >
+          {AUTH_NAV_COPY.signUp}
+        </Button>
+      </div>
     </header>
   );
 };
