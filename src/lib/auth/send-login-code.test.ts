@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, type PathParams } from "msw";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { LOGIN_REDIRECT_PATH } from "@/constants/auth";
@@ -32,11 +32,14 @@ const capture = (endpoint: string, response: Record<string, unknown>) => {
   const captured: Captured = {};
 
   server.use(
-    http.post(endpoint, async ({ request }) => {
-      captured.body = (await request.json()) as Record<string, unknown>;
+    http.post<PathParams, Record<string, unknown>>(
+      endpoint,
+      async ({ request }) => {
+        captured.body = await request.json();
 
-      return HttpResponse.json(response);
-    }),
+        return HttpResponse.json(response);
+      },
+    ),
   );
 
   return captured;

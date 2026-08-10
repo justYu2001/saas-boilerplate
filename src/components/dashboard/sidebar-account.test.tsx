@@ -6,7 +6,7 @@ import { DASHBOARD_COPY } from "@/constants/dashboard";
 
 import { SidebarAccount } from "./sidebar-account";
 
-const signOut = vi.fn();
+const signOut = vi.fn<() => Promise<unknown>>();
 const push = vi.fn();
 const refresh = vi.fn();
 
@@ -15,7 +15,7 @@ const refresh = vi.fn();
  * registers the One Tap plugin, which wants a Google script jsdom cannot fetch.
  */
 vi.mock("@/server/better-auth/client", () => ({
-  authClient: { signOut: () => signOut() as unknown },
+  authClient: { signOut: () => signOut() },
 }));
 
 vi.mock("next/navigation", () => ({
