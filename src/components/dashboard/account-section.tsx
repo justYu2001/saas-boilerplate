@@ -31,7 +31,13 @@ const memberSinceFormat = new Intl.DateTimeFormat("en-US", {
  * column can be wide enough to read without squeezing an email address onto
  * two lines on a phone.
  */
-function AccountRow({ label, children }: { label: string; children: string }) {
+const AccountRow = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: string;
+}) => {
   return (
     <div className="grid gap-0.5 py-3 sm:grid-cols-[9rem_1fr] sm:items-baseline sm:gap-4">
       <dt className="text-muted-foreground text-sm">{label}</dt>
@@ -40,7 +46,7 @@ function AccountRow({ label, children }: { label: string; children: string }) {
       </dd>
     </div>
   );
-}
+};
 
 /**
  * The account's own record, and the one control that ends it.
@@ -55,7 +61,7 @@ function AccountRow({ label, children }: { label: string; children: string }) {
  * on the way down the page, and much less than the red-bordered panel the
  * pattern usually attracts. The button carries the rest.
  */
-export function AccountSection({ user }: AccountSectionProps) {
+export const AccountSection = ({ user }: AccountSectionProps) => {
   /*
    * `resolveAccountName` answers with the address when the stored name is one
    * Better Auth derived from it, which is what the email-code flow leaves
@@ -110,4 +116,4 @@ export function AccountSection({ user }: AccountSectionProps) {
       </div>
     </section>
   );
-}
+};

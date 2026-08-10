@@ -22,11 +22,11 @@ interface SidebarBodyProps {
  * never drift into different navigations. The sheet renders it in its
  * expanded state; only the rail has a collapsed one.
  */
-export function SidebarBody({
+export const SidebarBody = ({
   user,
   collapsed = false,
   onNavigate,
-}: SidebarBodyProps) {
+}: SidebarBodyProps) => {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex h-14 shrink-0 items-center px-3">
@@ -60,4 +60,4 @@ export function SidebarBody({
       <SidebarAccount user={user} collapsed={collapsed} />
     </div>
   );
-}
+};

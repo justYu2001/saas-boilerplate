@@ -13,7 +13,7 @@ import type { SVGProps } from "react";
  *
  * @see https://developers.google.com/identity/branding-guidelines
  */
-function GoogleIcon(props: SVGProps<SVGSVGElement>) {
+const GoogleIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       viewBox="0 0 118 120"
@@ -40,6 +40,6 @@ function GoogleIcon(props: SVGProps<SVGSVGElement>) {
       />
     </svg>
   );
-}
+};
 
 export default GoogleIcon;

@@ -95,7 +95,7 @@ const resendVariants = [
  * `sizing` marks the hidden copies that exist only to measure: they must not
  * animate, since nothing is there to see.
  */
-function ResendLabel({
+const ResendLabel = ({
   label,
   spinner,
   sizing = false,
@@ -103,7 +103,7 @@ function ResendLabel({
   label: string;
   spinner: boolean;
   sizing?: boolean;
-}) {
+}) => {
   return (
     <span className="col-start-1 row-start-1 inline-flex items-center gap-1.5 justify-self-start">
       <span className={sizing ? undefined : inlineActionLabelClassName}>
@@ -117,7 +117,7 @@ function ResendLabel({
       )}
     </span>
   );
-}
+};
 
 /**
  * The room opens first and the message settles into it a beat later, so the
@@ -126,7 +126,13 @@ function ResendLabel({
  * stays mounted so screen readers announce into a live region that was
  * already there — freshly inserted alerts are missed by some of them.
  */
-function AnimatedFieldError({ id, message }: { id: string; message?: string }) {
+const AnimatedFieldError = ({
+  id,
+  message,
+}: {
+  id: string;
+  message?: string;
+}) => {
   return (
     <div
       className={cn(
@@ -152,9 +158,9 @@ function AnimatedFieldError({ id, message }: { id: string; message?: string }) {
       </p>
     </div>
   );
-}
+};
 
-export function LoginForm() {
+export const LoginForm = () => {
   const router = useRouter();
   const emailId = useId();
   const errorId = useId();
@@ -581,4 +587,4 @@ export function LoginForm() {
       </CardContent>
     </>
   );
-}
+};

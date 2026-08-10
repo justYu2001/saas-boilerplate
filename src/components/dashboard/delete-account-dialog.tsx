@@ -41,7 +41,7 @@ type Status = "idle" | "deleting" | "leaving";
 const matchesConfirmation = (value: string) =>
   value.trim().toLowerCase() === DELETE_ACCOUNT_CONFIRMATION;
 
-export function DeleteAccountDialog() {
+export const DeleteAccountDialog = () => {
   const router = useRouter();
   const confirmationId = useId();
 
@@ -61,7 +61,7 @@ export function DeleteAccountDialog() {
    */
   const needsFreshLogin = failure === "stale-session";
 
-  function handleOpenChange(open: boolean) {
+  const handleOpenChange = (open: boolean) => {
     // Nothing may close the dialog while the request is in flight — not the
     // Escape key, and not the cancel button. There is no request to cancel.
     if (isBusy) return;
@@ -74,9 +74,9 @@ export function DeleteAccountDialog() {
       setFailure(null);
       setHasSignOutFailed(false);
     }
-  }
+  };
 
-  async function handleDelete(event: SubmitEvent<HTMLFormElement>) {
+  const handleDelete = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!isConfirmed || isBusy) return;
@@ -102,9 +102,9 @@ export function DeleteAccountDialog() {
         error instanceof DeleteAccountError ? error.reason : "unknown",
       );
     }
-  }
+  };
 
-  async function handleSignOut() {
+  const handleSignOut = async () => {
     setIsSigningOut(true);
     setHasSignOutFailed(false);
 
@@ -118,7 +118,7 @@ export function DeleteAccountDialog() {
 
     router.push(LOGIN_PATH);
     router.refresh();
-  }
+  };
 
   const isDeleting = status !== "idle";
   const errorMessage = hasSignOutFailed
@@ -262,4 +262,4 @@ export function DeleteAccountDialog() {
       </AlertDialogContent>
     </AlertDialog>
   );
-}
+};

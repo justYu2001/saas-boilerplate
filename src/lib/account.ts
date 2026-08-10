@@ -21,7 +21,10 @@ const localPart = (email: string) => email.split("@")[0] ?? email;
  * This is the whole identity the sidebar prints — the address is a fallback,
  * not a subtitle, so an account with a real name never shows one.
  */
-export function resolveAccountName({ name, email }: AccountIdentity): string {
+export const resolveAccountName = ({
+  name,
+  email,
+}: AccountIdentity): string => {
   const trimmed = name?.trim() ?? "";
 
   if (!trimmed || isDerivedFromEmail(trimmed, email)) {
@@ -29,13 +32,13 @@ export function resolveAccountName({ name, email }: AccountIdentity): string {
   }
 
   return trimmed;
-}
+};
 
-function isDerivedFromEmail(name: string, email: string): boolean {
+const isDerivedFromEmail = (name: string, email: string): boolean => {
   const normalized = name.toLowerCase();
 
   return (
     normalized === email.toLowerCase() ||
     normalized === localPart(email).toLowerCase()
   );
-}
+};

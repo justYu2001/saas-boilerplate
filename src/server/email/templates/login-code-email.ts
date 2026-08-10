@@ -107,14 +107,14 @@ const RESET =
  * meant to be edited by a fork, and that is exactly the kind of edit nobody
  * re-audits this file for.
  */
-function escapeHtml(value: string): string {
+const escapeHtml = (value: string): string => {
   return value
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
+};
 
 /**
  * First character of the product name, for the monogram tile.
@@ -123,9 +123,9 @@ function escapeHtml(value: string): string {
  * emoji or an astral-plane character yields a whole glyph instead of half a
  * surrogate pair.
  */
-function brandInitial(): string {
+const brandInitial = (): string => {
   return [...APP_NAME.trim()][0] ?? "";
-}
+};
 
 /**
  * Renders the code email.
@@ -142,10 +142,10 @@ function brandInitial(): string {
  * and Apple Mail all agree on, and a login code is the last email that should
  * arrive looking broken.
  */
-export function renderLoginCodeEmail({
+export const renderLoginCodeEmail = ({
   code,
   type,
-}: LoginCodeEmailInput): LoginCodeEmail {
+}: LoginCodeEmailInput): LoginCodeEmail => {
   const copy = COPY[type];
   const safeCode = escapeHtml(code);
   const safeAppName = escapeHtml(APP_NAME);
@@ -254,4 +254,4 @@ export function renderLoginCodeEmail({
   ].join("\n");
 
   return { subject: copy.subject, html, text };
-}
+};

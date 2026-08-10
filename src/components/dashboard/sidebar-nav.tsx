@@ -19,7 +19,10 @@ interface SidebarNavProps {
   onNavigate?: () => void;
 }
 
-export function SidebarNav({ collapsed = false, onNavigate }: SidebarNavProps) {
+export const SidebarNav = ({
+  collapsed = false,
+  onNavigate,
+}: SidebarNavProps) => {
   const pathname = usePathname();
 
   return (
@@ -90,4 +93,4 @@ export function SidebarNav({ collapsed = false, onNavigate }: SidebarNavProps) {
       </ul>
     </nav>
   );
-}
+};

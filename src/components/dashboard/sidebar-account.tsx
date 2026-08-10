@@ -32,17 +32,17 @@ interface SidebarAccountProps {
  * the address underneath as well would only repeat it for exactly the people it
  * tells nothing new.
  */
-export function SidebarAccount({
+export const SidebarAccount = ({
   user,
   collapsed = false,
-}: SidebarAccountProps) {
+}: SidebarAccountProps) => {
   const router = useRouter();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [hasFailed, setHasFailed] = useState(false);
 
   const name = resolveAccountName(user);
 
-  async function handleSignOut() {
+  const handleSignOut = async () => {
     setIsSigningOut(true);
     setHasFailed(false);
 
@@ -67,7 +67,7 @@ export function SidebarAccount({
      * Without the refresh, a back navigation would show the shell again.
      */
     router.refresh();
-  }
+  };
 
   const signOutLabel = isSigningOut
     ? DASHBOARD_COPY.signOutPending
@@ -163,4 +163,4 @@ export function SidebarAccount({
       </p>
     </div>
   );
-}
+};

@@ -15,7 +15,7 @@ const ROUTES: readonly Route[] = [
   { path: "/", changeFrequency: "monthly", priority: 1 },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+const sitemap = (): MetadataRoute.Sitemap => {
   const lastModified = new Date();
 
   return ROUTES.map(({ path, changeFrequency, priority }) => ({
@@ -24,4 +24,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency,
     priority,
   }));
-}
+};
+
+export default sitemap;

@@ -41,7 +41,7 @@ let onPromptRequested: (notify: (notification: unknown) => void) => void;
  * `./one-tap.ts`, which covers only the one method production calls. Here we
  * are impersonating Google, not consuming it.
  */
-function installGoogleStub() {
+const installGoogleStub = () => {
   window.googleScriptInitialized = true;
   window.google = {
     accounts: {
@@ -55,10 +55,10 @@ function installGoogleStub() {
       },
     },
   } as unknown as typeof window.google;
-}
+};
 
 /** Answers the callback endpoint and records what was posted to it. */
-function captureCallback(): { body?: Record<string, unknown> } {
+const captureCallback = (): { body?: Record<string, unknown> } => {
   const captured: { body?: Record<string, unknown> } = {};
 
   server.use(
@@ -73,7 +73,7 @@ function captureCallback(): { body?: Record<string, unknown> } {
   );
 
   return captured;
-}
+};
 
 beforeEach(() => {
   initializeConfig = undefined;

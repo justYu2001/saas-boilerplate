@@ -26,7 +26,7 @@ interface ResendSendBody {
  * Registers a successful send and hands back the payload Resend actually
  * received, so assertions read the wire format rather than a mock's arguments.
  */
-function captureSend() {
+const captureSend = () => {
   const captured: { body?: ResendSendBody; authorization?: string } = {};
 
   server.use(
@@ -39,7 +39,7 @@ function captureSend() {
   );
 
   return captured;
-}
+};
 
 const send = () =>
   sendLoginCodeEmail({

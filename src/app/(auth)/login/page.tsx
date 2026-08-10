@@ -13,10 +13,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function LoginPage() {
+const LoginPage = () => {
   return (
     <AuthShell>
       <LoginForm />
     </AuthShell>
   );
-}
+};
+
+export default LoginPage;

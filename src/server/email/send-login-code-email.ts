@@ -27,11 +27,11 @@ interface SendLoginCodeEmailInput {
  * attacker cannot read the difference between "no such account", "that domain
  * bounces", and "our key expired".
  */
-export async function sendLoginCodeEmail({
+export const sendLoginCodeEmail = async ({
   email,
   code,
   type,
-}: SendLoginCodeEmailInput): Promise<void> {
+}: SendLoginCodeEmailInput): Promise<void> => {
   const { subject, html, text } = renderLoginCodeEmail({ code, type });
 
   const { data, error } = await resend.emails.send({
@@ -62,4 +62,4 @@ export async function sendLoginCodeEmail({
       `Resend accepted the ${type} code email without returning a message id.`,
     );
   }
-}
+};

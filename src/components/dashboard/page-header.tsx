@@ -4,7 +4,7 @@ import type { PropsWithChildren } from "react";
 interface PageHeaderProps extends PropsWithChildren {
   title: string;
   description?: string;
-};
+}
 
 /**
  * The heading block every dashboard page opens with.
@@ -14,7 +14,11 @@ interface PageHeaderProps extends PropsWithChildren {
  * border for no gain. The rule is where the page's chrome ends and its content
  * starts, which is the only division most pages need.
  */
-export function PageHeader({ title, description, children }: PageHeaderProps) {
+export const PageHeader = ({
+  title,
+  description,
+  children,
+}: PageHeaderProps) => {
   return (
     <header className="border-border flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-b pb-5">
       <div className="min-w-0">
@@ -32,4 +36,4 @@ export function PageHeader({ title, description, children }: PageHeaderProps) {
       {children}
     </header>
   );
-}
+};

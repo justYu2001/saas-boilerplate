@@ -22,9 +22,7 @@ import { getSession } from "@/server/better-auth/server";
  * ever becomes the bottleneck, Better Auth's `session.cookieCache` answers it
  * from a signed cookie instead of the database.
  */
-export default async function MarketingLayout({
-  children,
-}: Readonly<PropsWithChildren>) {
+const MarketingLayout = async ({ children }: Readonly<PropsWithChildren>) => {
   const session = await getSession();
 
   return (
@@ -33,4 +31,6 @@ export default async function MarketingLayout({
       {children}
     </>
   );
-}
+};
+
+export default MarketingLayout;

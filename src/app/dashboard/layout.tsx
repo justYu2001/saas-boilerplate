@@ -31,9 +31,7 @@ export const metadata: Metadata = {
  * both a flash of the wrong screen and a shell briefly shipped to someone who
  * is not signed in.
  */
-export default async function DashboardLayout({
-  children,
-}: Readonly<PropsWithChildren>) {
+const DashboardLayout = async ({ children }: Readonly<PropsWithChildren>) => {
   const session = await getSession();
 
   if (!session) {
@@ -52,4 +50,6 @@ export default async function DashboardLayout({
       {children}
     </DashboardShell>
   );
-}
+};
+
+export default DashboardLayout;

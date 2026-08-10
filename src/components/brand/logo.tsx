@@ -15,7 +15,7 @@ interface LogoProps {
  * Single source of truth so the navbar and the auth surfaces cannot drift
  * apart. Replace the mark and {@link APP_NAME} when rebranding a fork.
  */
-export function Logo({ showWordmark = true, className }: LogoProps) {
+export const Logo = ({ showWordmark = true, className }: LogoProps) => {
   return (
     <span className={cn("flex items-center text-lg font-bold", className)}>
       <ChevronsDown
@@ -33,4 +33,4 @@ export function Logo({ showWordmark = true, className }: LogoProps) {
       <span className={showWordmark ? undefined : "sr-only"}>{APP_NAME}</span>
     </span>
   );
-}
+};

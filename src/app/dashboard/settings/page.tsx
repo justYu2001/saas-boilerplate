@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: COPY.title,
 };
 
-export default async function DashboardSettingsPage() {
+const DashboardSettingsPage = async () => {
   const { user } = await requireSession();
 
   /*
@@ -35,4 +35,6 @@ export default async function DashboardSettingsPage() {
       />
     </div>
   );
-}
+};
+
+export default DashboardSettingsPage;

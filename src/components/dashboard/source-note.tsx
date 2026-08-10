@@ -13,7 +13,7 @@ interface SourceNoteProps {
  *
  * Delete this component along with the last call site once real pages exist.
  */
-export function SourceNote({ path }: SourceNoteProps) {
+export const SourceNote = ({ path }: SourceNoteProps) => {
   return (
     <p className="text-muted-foreground mt-8 text-sm">
       Build this page in{" "}
@@ -25,4 +25,4 @@ export function SourceNote({ path }: SourceNoteProps) {
       {"."}
     </p>
   );
-}
+};
