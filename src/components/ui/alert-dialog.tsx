@@ -61,12 +61,23 @@ function AlertDialogContent({
         moment in this component — an exponential ease-out so it decelerates
         into place rather than gliding at a constant speed. Reduced motion
         keeps the fade and drops the scale.
+
+        Widths are the registry's, so `size` keeps meaning what it says. The
+        one change is `w-[calc(100%-2rem)]` in place of `w-full`: the caps
+        above leave a gutter on their own at any phone width except 320px,
+        where `max-w-xs` is the whole screen and the popup would otherwise sit
+        edge to edge.
+
+        Overriding the cap from a call site takes a `data-[size=...]:` prefix
+        of its own. A bare `sm:max-w-md` loses to the attribute selector here
+        on specificity, and tailwind-merge sees two different keys, so it
+        cannot warn you — the class ships and does nothing.
       */}
       <AlertDialogPrimitive.Popup
         data-slot="alert-dialog-content"
         data-size={size}
         className={cn(
-          "group/alert-dialog-content bg-popover text-popover-foreground ring-foreground/10 fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl p-4 shadow-lg ring-1 outline-none data-ending-style:opacity-0 data-starting-style:opacity-0 motion-safe:transition-[opacity,scale] motion-safe:duration-200 motion-safe:ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:data-ending-style:scale-96 motion-safe:data-starting-style:scale-96 motion-reduce:transition-opacity motion-reduce:duration-150",
+          "group/alert-dialog-content bg-popover text-popover-foreground ring-foreground/10 fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl p-4 shadow-lg ring-1 outline-none data-ending-style:opacity-0 data-starting-style:opacity-0 data-[size=default]:max-w-xs data-[size=sm]:max-w-xs motion-safe:transition-[opacity,scale] motion-safe:duration-200 motion-safe:ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:data-ending-style:scale-96 motion-safe:data-starting-style:scale-96 motion-reduce:transition-opacity motion-reduce:duration-150 data-[size=default]:sm:max-w-sm",
           className,
         )}
         {...props}
@@ -82,6 +93,16 @@ function AlertDialogContent({
  * icon would leave the title in a column of its own. From `sm` the icon steps
  * out to the side and the text goes left-aligned, which is where it reads
  * faster once there is a line's worth of room.
+ *
+ * The two-column track list is a fix on top of the registry, which declares
+ * rows and lets the columns fall out implicitly. Implicit tracks are `auto`,
+ * and grid stretches `auto` tracks to absorb whatever space the container has
+ * left over — so a description shorter than the popup is wide leaves slack,
+ * half of it lands in the icon's column, and the icon sits at the start of a
+ * column wider than itself with the title pushed away from it. Declaring the
+ * text column as `1fr` gives the leftover space somewhere to go, which pins
+ * the gap to `gap-x-4` at every body length. `minmax(0,...)` so a long
+ * unbroken string shrinks the column rather than overflowing the popup.
  */
 function AlertDialogHeader({
   className,
@@ -91,7 +112,7 @@ function AlertDialogHeader({
     <div
       data-slot="alert-dialog-header"
       className={cn(
-        "grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]",
+        "grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-cols-[auto_minmax(0,1fr)] sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]",
         className,
       )}
       {...props}
