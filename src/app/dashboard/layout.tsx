@@ -1,6 +1,7 @@
 import { type Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import type { ReactNode } from "react";
 
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { APP_NAME } from "@/constants/app";
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
  */
 export default async function DashboardLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{ children: ReactNode }>) {
   const session = await getSession();
 
   if (!session) {

@@ -2,7 +2,7 @@
 
 import { ChevronsLeft, ChevronsRight, Menu } from "lucide-react";
 import Link from "next/link";
-import * as React from "react";
+import { useState, type ReactNode } from "react";
 
 import { Logo } from "@/components/brand/logo";
 import type { SidebarAccountUser } from "@/components/dashboard/sidebar-account";
@@ -32,7 +32,7 @@ interface DashboardShellProps {
   user: SidebarAccountUser;
   /** Read from the cookie on the server, so the rail paints at its real width. */
   defaultCollapsed: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 /**
@@ -50,8 +50,8 @@ export function DashboardShell({
   defaultCollapsed,
   children,
 }: DashboardShellProps) {
-  const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  const [isMobileNavOpen, setIsMobileNavOpen] = React.useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   function toggleCollapsed() {
     const next = !isCollapsed;

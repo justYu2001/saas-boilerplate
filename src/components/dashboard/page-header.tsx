@@ -1,10 +1,10 @@
-import type * as React from "react";
+import type { ReactNode } from "react";
 
 interface PageHeaderProps {
   title: string;
   description?: string;
   /** Primary actions for the page, aligned to the heading's baseline row. */
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 /**

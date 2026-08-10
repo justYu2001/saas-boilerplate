@@ -1,4 +1,4 @@
-import type * as React from "react";
+import type { ComponentType, SVGProps } from "react";
 
 import GoogleIcon from "@/components/icons/google-icon";
 import { DASHBOARD_PATH } from "@/constants/dashboard";
@@ -100,7 +100,7 @@ export interface OAuthProvider {
   id: "google";
   /** Full button label. Google requires "Continue with Google" or similar. */
   label: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
 /** Social providers offered on the login page, in display order. */

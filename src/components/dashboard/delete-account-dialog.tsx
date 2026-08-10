@@ -2,7 +2,7 @@
 
 import { Check, LoaderCircle, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
-import * as React from "react";
+import { useId, useState, type SubmitEvent } from "react";
 
 import {
   AlertDialog,
@@ -43,16 +43,14 @@ const matchesConfirmation = (value: string) =>
 
 export function DeleteAccountDialog() {
   const router = useRouter();
-  const confirmationId = React.useId();
+  const confirmationId = useId();
 
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [confirmation, setConfirmation] = React.useState("");
-  const [status, setStatus] = React.useState<Status>("idle");
-  const [failure, setFailure] = React.useState<DeleteAccountFailure | null>(
-    null,
-  );
-  const [isSigningOut, setIsSigningOut] = React.useState(false);
-  const [hasSignOutFailed, setHasSignOutFailed] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [confirmation, setConfirmation] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
+  const [failure, setFailure] = useState<DeleteAccountFailure | null>(null);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [hasSignOutFailed, setHasSignOutFailed] = useState(false);
 
   const isConfirmed = matchesConfirmation(confirmation);
   const isBusy = status !== "idle" || isSigningOut;
@@ -78,7 +76,7 @@ export function DeleteAccountDialog() {
     }
   }
 
-  async function handleDelete(event: React.SubmitEvent<HTMLFormElement>) {
+  async function handleDelete(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!isConfirmed || isBusy) return;
