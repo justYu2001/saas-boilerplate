@@ -3,7 +3,7 @@
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { useState } from "react";
 
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
@@ -69,7 +69,7 @@ const featureList: FeatureProps[] = [
 ];
 
 export const Navbar = ({ isSignedIn }: NavbarProps) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   /*
    * The marketing pages stay open to everyone, signed in or not, so the header

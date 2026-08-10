@@ -2,7 +2,7 @@
 
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import * as React from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -37,8 +37,8 @@ export function SidebarAccount({
   collapsed = false,
 }: SidebarAccountProps) {
   const router = useRouter();
-  const [isSigningOut, setIsSigningOut] = React.useState(false);
-  const [hasFailed, setHasFailed] = React.useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [hasFailed, setHasFailed] = useState(false);
 
   const name = resolveAccountName(user);
 

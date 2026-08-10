@@ -1,4 +1,4 @@
-import * as React from "react";
+import type { SVGProps } from "react";
 
 /**
  * Google's "G" mark — the official `logo_googleg_48dp` artwork.
@@ -13,7 +13,7 @@ import * as React from "react";
  *
  * @see https://developers.google.com/identity/branding-guidelines
  */
-function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
+function GoogleIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       viewBox="0 0 118 120"

@@ -1,6 +1,6 @@
-import * as React from "react";
+import type { SVGProps } from "react";
 
-function DiscordIcon(props: React.SVGProps<SVGSVGElement> | undefined) {
+function DiscordIcon(props: SVGProps<SVGSVGElement> | undefined) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

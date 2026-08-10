@@ -1,5 +1,5 @@
 import { Settings } from "lucide-react";
-import type * as React from "react";
+import type { ComponentType, SVGProps } from "react";
 
 /** The signed-in home, and where a completed login lands. */
 export const DASHBOARD_PATH = "/dashboard";
@@ -7,7 +7,7 @@ export const DASHBOARD_PATH = "/dashboard";
 export interface DashboardNavItem {
   href: string;
   label: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
 /**

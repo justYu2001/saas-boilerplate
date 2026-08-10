@@ -1,12 +1,12 @@
 import Link from "next/link";
-import type * as React from "react";
+import type { ReactNode } from "react";
 
 import { Logo } from "@/components/brand/logo";
 import { Card } from "@/components/ui/card";
 
 interface AuthShellProps {
   /** Card contents — compose with `CardHeader` / `CardContent`. */
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 /**

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { Navbar } from "@/components/layout/navbar";
 import { getSession } from "@/server/better-auth/server";
 
@@ -22,7 +24,7 @@ import { getSession } from "@/server/better-auth/server";
  */
 export default async function MarketingLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{ children: ReactNode }>) {
   const session = await getSession();
 
   return (
