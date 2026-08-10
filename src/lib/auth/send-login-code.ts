@@ -20,7 +20,7 @@ import { authClient } from "@/server/better-auth/client";
 const assertOk = (
   error: { message?: string | undefined } | null,
   fallbackMessage: string,
-): void => {
+) => {
   if (error) {
     throw new Error(error.message ?? fallbackMessage);
   }
@@ -34,7 +34,7 @@ const assertOk = (
  * provider failure is logged server-side rather than reported here. See the
  * note on `sendVerificationOTP` in `src/server/better-auth/config.ts`.
  */
-export const sendLoginCode = async (email: string): Promise<void> => {
+export const sendLoginCode = async (email: string) => {
   const { error } = await authClient.emailOtp.sendVerificationOtp({
     email,
     type: "sign-in",
@@ -51,10 +51,7 @@ export const sendLoginCode = async (email: string): Promise<void> => {
  * in a row — at which point the code itself is discarded and the user needs a
  * new one.
  */
-export const verifyLoginCode = async (
-  email: string,
-  code: string,
-): Promise<void> => {
+export const verifyLoginCode = async (email: string, code: string) => {
   const { error } = await authClient.signIn.emailOtp({ email, otp: code });
 
   assertOk(error, "Better Auth rejected the login code.");
@@ -67,9 +64,7 @@ export const verifyLoginCode = async (
  * on the happy path this never resolves — the page is gone. It only settles to
  * report that the redirect could not be started.
  */
-export const signInWithProvider = async (
-  provider: OAuthProvider["id"],
-): Promise<void> => {
+export const signInWithProvider = async (provider: OAuthProvider["id"]) => {
   const { error } = await authClient.signIn.social({
     provider,
     callbackURL: LOGIN_REDIRECT_PATH,

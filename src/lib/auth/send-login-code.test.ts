@@ -28,10 +28,7 @@ interface Captured {
 }
 
 /** Answers `endpoint` with `response` and records what was posted to it. */
-const capture = (
-  endpoint: string,
-  response: Record<string, unknown>,
-): Captured => {
+const capture = (endpoint: string, response: Record<string, unknown>) => {
   const captured: Captured = {};
 
   server.use(

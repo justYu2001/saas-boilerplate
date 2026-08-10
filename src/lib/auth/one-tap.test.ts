@@ -58,7 +58,7 @@ const installGoogleStub = () => {
 };
 
 /** Answers the callback endpoint and records what was posted to it. */
-const captureCallback = (): { body?: Record<string, unknown> } => {
+const captureCallback = () => {
   const captured: { body?: Record<string, unknown> } = {};
 
   server.use(

@@ -15,7 +15,7 @@ export const JsonLd = ({ data }: JsonLdProps) => {
   );
 };
 
-const safeJsonLd = (data: WithContext<Thing> | Graph): string =>
+const safeJsonLd = (data: WithContext<Thing> | Graph) =>
   JSON.stringify(data)
     .replace(/</g, "\\u003C")
     .replace(/>/g, "\\u003E")
