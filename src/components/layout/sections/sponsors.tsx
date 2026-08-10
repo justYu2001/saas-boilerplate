@@ -1,19 +1,29 @@
+import {
+  Cookie,
+  Crown,
+  Drama,
+  Ghost,
+  Puzzle,
+  Squirrel,
+  Vegan,
+  type LucideIcon,
+} from "lucide-react";
+
 import { Marquee } from "@/components/primitives/marquee";
-import { Icon, type IconName } from "@/components/ui/icon";
 
 interface SponsorProps {
-  icon: IconName;
+  icon: LucideIcon;
   name: string;
 }
 
 const sponsors: SponsorProps[] = [
-  { icon: "Crown", name: "Acmebrand" },
-  { icon: "Vegan", name: "Acmelogo" },
-  { icon: "Ghost", name: "Acmesponsor" },
-  { icon: "Puzzle", name: "Acmeipsum" },
-  { icon: "Squirrel", name: "Acme" },
-  { icon: "Cookie", name: "Accmee" },
-  { icon: "Drama", name: "Acmetech" },
+  { icon: Crown, name: "Acmebrand" },
+  { icon: Vegan, name: "Acmelogo" },
+  { icon: Ghost, name: "Acmesponsor" },
+  { icon: Puzzle, name: "Acmeipsum" },
+  { icon: Squirrel, name: "Acme" },
+  { icon: Cookie, name: "Accmee" },
+  { icon: Drama, name: "Acmetech" },
 ];
 
 export const SponsorsSection = () => {
@@ -25,19 +35,14 @@ export const SponsorsSection = () => {
 
       <div className="mx-auto">
         <Marquee fade pauseOnHover>
-          {sponsors.map(({ icon, name }) => (
+          {sponsors.map(({ icon: Icon, name }) => (
             <div
               key={name}
               className="text-foreground flex items-center text-xl font-medium md:text-2xl"
             >
               {/* The template hardcoded `color="white"`, which is invisible in
                   light mode; `currentColor` follows the theme instead. */}
-              <Icon
-                name={icon}
-                size={32}
-                color="currentColor"
-                className="mr-2"
-              />
+              <Icon size={32} color="currentColor" className="mr-2" />
               {name}
             </div>
           ))}

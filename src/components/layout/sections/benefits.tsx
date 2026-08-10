@@ -1,34 +1,41 @@
+import {
+  Blocks,
+  ChartLine,
+  Sparkle,
+  Wallet,
+  type LucideIcon,
+} from "lucide-react";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Icon, type IconName } from "@/components/ui/icon";
 
 interface BenefitProps {
-  icon: IconName;
+  icon: LucideIcon;
   title: string;
   description: string;
 }
 
 const benefitList: BenefitProps[] = [
   {
-    icon: "Blocks",
+    icon: Blocks,
     title: "Build Brand Trust",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A odio velit cum aliquam. Natus consectetur dolores.",
   },
   {
     // Renamed from `LineChart` in lucide v1.
-    icon: "ChartLine",
+    icon: ChartLine,
     title: "More Leads",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A odio velit cum aliquam, natus consectetur.",
   },
   {
-    icon: "Wallet",
+    icon: Wallet,
     title: "Higher Conversions",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus consectetur. A odio velit cum aliquam",
   },
   {
-    icon: "Sparkle",
+    icon: Sparkle,
     title: "Test Marketing Ideas",
     description:
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. A odio velit cum aliquam. Natus consectetur dolores.",
@@ -53,7 +60,7 @@ export const BenefitsSection = () => {
         </div>
 
         <div className="grid w-full gap-4 lg:grid-cols-2">
-          {benefitList.map(({ icon, title, description }, index) => (
+          {benefitList.map(({ icon: Icon, title, description }, index) => (
             <Card
               key={title}
               className="group/number bg-muted/50 hover:bg-background dark:bg-card text-base transition-all delay-75 [--card-spacing:--spacing(6)]"
@@ -61,7 +68,6 @@ export const BenefitsSection = () => {
               <CardHeader>
                 <div className="flex justify-between">
                   <Icon
-                    name={icon}
                     size={32}
                     color="var(--primary)"
                     className="text-primary mb-6"
