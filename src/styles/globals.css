@@ -64,6 +64,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-emphasis: var(--destructive-emphasis);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -108,6 +109,21 @@
   --accent: oklch(0.97 0.001 106.4);
   --accent-foreground: oklch(0.216 0.006 56);
   --destructive: oklch(0.637 0.208 25.3);
+  /*
+   * The member of the destructive ramp that may carry text.
+   *
+   * `--destructive` itself measures 3.76:1 against `--background` and 3.30:1
+   * on the 10% tint the destructive button and badge sit on — both under the
+   * 4.5:1 AA floor for normal text. That is inherited from the shadcn template
+   * and is the same defect PRODUCT.md records against the orange primary.
+   *
+   * It is left alone here rather than corrected in place, because every
+   * existing error message and invalid-field ring is drawn from it and would
+   * shift. This is the deeper end of the same hue for anything that has to be
+   * read: 5.89:1 on the page, 5.17:1 on the tint, 4.84:1 on the tint's hover.
+   * `--destructive` keeps the fills, borders, and rings; this keeps the words.
+   */
+  --destructive-emphasis: oklch(0.53 0.208 25.3);
   --border: oklch(0.923 0.003 48.7);
   --input: oklch(0.923 0.003 48.7);
   --ring: oklch(0.705 0.187 47.6);
@@ -143,6 +159,12 @@
   --accent: oklch(0.269 0.006 34.3);
   --accent-foreground: oklch(0.985 0.001 106.4);
   --destructive: oklch(0.577 0.215 27.3);
+  /*
+   * Lighter than the light-mode value rather than darker, because the surface
+   * it is read against inverted. 6.83:1 on `--background`, 5.89:1 on the 20%
+   * tint dark mode gives the destructive button.
+   */
+  --destructive-emphasis: oklch(0.7 0.18 27.3);
   --border: oklch(0.269 0.006 34.3);
   --input: oklch(0.269 0.006 34.3);
   --ring: oklch(0.645 0.194 41.1);

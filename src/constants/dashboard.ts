@@ -69,10 +69,15 @@ export const DASHBOARD_COPY = {
 /**
  * Per-route copy for the pages themselves.
  *
- * The dashboard ships as a shell: the chrome is finished, and the canvas is
+ * The dashboard ships as a shell: the chrome is finished, and the overview is
  * deliberately empty so a fork's first feature is the first thing on it rather
- * than the second. Each page says where its code lives instead of standing in
- * with sample charts a fork would have to find and delete.
+ * than the second. That page says where its code lives instead of standing in
+ * with sample charts a fork would have to find and delete — hence the optional
+ * `source`, which belongs only to a page that has nothing on it yet.
+ *
+ * Settings is the exception, and the shape of what replaces the note: a real
+ * section, built out of the same tokens, that a fork extends rather than
+ * deletes.
  */
 export const DASHBOARD_PAGE_COPY = {
   overview: {
@@ -81,10 +86,14 @@ export const DASHBOARD_PAGE_COPY = {
       "Your product's first screen lands here. Nothing is rendered yet.",
     source: "src/app/dashboard/page.tsx",
   },
+  /*
+   * The one page that is no longer a shell. Account is real, so the
+   * description stops apologising for an empty canvas and says what is here —
+   * and `source` goes with it, since a page carrying working controls no
+   * longer has to explain itself with a file path.
+   */
   settings: {
     title: "Settings",
-    description:
-      "Account and workspace preferences belong here. Nothing is rendered yet.",
-    source: "src/app/dashboard/settings/page.tsx",
+    description: "Your account, and how you sign in to it.",
   },
 } as const;

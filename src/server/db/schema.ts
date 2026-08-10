@@ -15,10 +15,18 @@ export const posts = createTable(
   (d) => ({
     id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
     name: d.varchar({ length: 256 }),
+    /*
+     * Cascades, like every other reference to `user` here. A post outlives its
+     * author only as an orphan row Postgres will not let you create: without
+     * this, deleting an account from `/dashboard/settings` fails on a foreign
+     * key the moment that account has written anything. A fork that wants
+     * authored content to survive its author needs a nullable column and
+     * `onDelete: "set null"`, not the default.
+     */
     createdById: d
       .varchar({ length: 255 })
       .notNull()
-      .references(() => user.id),
+      .references(() => user.id, { onDelete: "cascade" }),
     createdAt: d
       .timestamp({ withTimezone: true })
       .$defaultFn(() => new Date())

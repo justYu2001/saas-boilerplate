@@ -25,6 +25,37 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  user: {
+    /*
+     * Powers the delete-account control in `/dashboard/settings`. Off by
+     * default in Better Auth, and the endpoint 404s until it is turned on.
+     *
+     * Deletion removes the `user` row; the `session`, `account`, and `post`
+     * rows that reference it go with it through `on delete cascade` in
+     * `@/server/db/schema`. A fork that adds a table pointing at `user` has to
+     * declare the same, or the delete fails on a foreign key. Anything living
+     * outside the database — a Stripe customer, an uploaded file, a search
+     * index entry — belongs in a `beforeDelete` hook here.
+     *
+     * Two constraints worth knowing before shipping this:
+     *
+     * There is no password to prove intent with on a passwordless account, so
+     * Better Auth falls back to session freshness and refuses a session older
+     * than `session.freshAge` — one day by default. Sessions last seven, so a
+     * returning user is usually past it and gets `SESSION_EXPIRED`. The dialog
+     * treats that as a state rather than an error and offers a fresh login;
+     * see `@/components/dashboard/delete-account-dialog`.
+     *
+     * Adding `sendDeleteAccountVerification` here changes the flow entirely:
+     * the endpoint then emails a confirmation link instead of deleting, and
+     * the freshness check no longer applies. That is the right trade for a
+     * product where account loss is expensive, and it needs an email template
+     * and a landing route that this boilerplate does not ship.
+     */
+    deleteUser: {
+      enabled: true,
+    },
+  },
   socialProviders: {
     google: {
       clientId: env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
