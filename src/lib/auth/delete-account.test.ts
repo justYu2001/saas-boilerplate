@@ -2,14 +2,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { deleteAccount, DeleteAccountError } from "./delete-account";
 
-const deleteUser = vi.fn();
+const deleteUser = vi.fn<(body: unknown) => Promise<unknown>>();
 
 /*
  * Mocking the client whole keeps the real one from being constructed — it
  * registers the One Tap plugin, which wants a Google script jsdom cannot fetch.
+ * The indirection is what defers reading `deleteUser` until the factory runs,
+ * which is before this module's own bindings are initialised.
  */
 vi.mock("@/server/better-auth/client", () => ({
-  authClient: { deleteUser: (body: unknown) => deleteUser(body) as unknown },
+  authClient: { deleteUser: (body: unknown) => deleteUser(body) },
 }));
 
 beforeEach(() => {

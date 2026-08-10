@@ -17,10 +17,10 @@ vi.mock("@/lib/auth/one-tap", () => ({
  * script plugin into a jsdom that has no `accounts.google.com` to fetch it
  * from.
  */
-const useSession = vi.fn();
+const useSession = vi.fn<() => unknown>();
 
 vi.mock("@/server/better-auth/client", () => ({
-  authClient: { useSession: () => useSession() as unknown },
+  authClient: { useSession: () => useSession() },
 }));
 
 const routerRefresh = vi.fn();

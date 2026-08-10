@@ -7,8 +7,8 @@ import { LOGIN_PATH } from "@/constants/auth";
 
 import { DeleteAccountDialog } from "./delete-account-dialog";
 
-const deleteUser = vi.fn();
-const signOut = vi.fn();
+const deleteUser = vi.fn<(body: unknown) => Promise<unknown>>();
+const signOut = vi.fn<() => Promise<unknown>>();
 const replace = vi.fn();
 const push = vi.fn();
 const refresh = vi.fn();
@@ -21,8 +21,8 @@ const refresh = vi.fn();
  */
 vi.mock("@/server/better-auth/client", () => ({
   authClient: {
-    deleteUser: (body: unknown) => deleteUser(body) as unknown,
-    signOut: () => signOut() as unknown,
+    deleteUser: (body: unknown) => deleteUser(body),
+    signOut: () => signOut(),
   },
 }));
 

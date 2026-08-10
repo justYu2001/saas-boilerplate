@@ -5,7 +5,7 @@
 // environment there is one, so merely importing the Resend client throws
 // "attempted to access a server-side environment variable on the client".
 
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, type PathParams } from "msw";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { server } from "@/mocks/server";
@@ -30,12 +30,15 @@ const captureSend = () => {
   const captured: { body?: ResendSendBody; authorization?: string } = {};
 
   server.use(
-    http.post(RESEND_SEND_ENDPOINT, async ({ request }) => {
-      captured.body = (await request.json()) as ResendSendBody;
-      captured.authorization = request.headers.get("authorization") ?? "";
+    http.post<PathParams, ResendSendBody>(
+      RESEND_SEND_ENDPOINT,
+      async ({ request }) => {
+        captured.body = await request.json();
+        captured.authorization = request.headers.get("authorization") ?? "";
 
-      return HttpResponse.json({ id: "8f1c4b6e-message-id" });
-    }),
+        return HttpResponse.json({ id: "8f1c4b6e-message-id" });
+      },
+    ),
   );
 
   return captured;

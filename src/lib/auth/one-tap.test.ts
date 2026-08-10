@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, type PathParams } from "msw";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { server } from "@/mocks/server";
@@ -39,11 +39,12 @@ let onPromptRequested: (notify: (notification: unknown) => void) => void;
 /*
  * The stub is necessarily wider than the `Window.google` declaration in
  * `./one-tap.ts`, which covers only the one method production calls. Here we
- * are impersonating Google, not consuming it.
+ * are impersonating Google, not consuming it. Assigned through a binding rather
+ * than inline, so the extra methods are read as structural width rather than as
+ * excess properties on a fresh object literal.
  */
 const installGoogleStub = () => {
-  window.googleScriptInitialized = true;
-  window.google = {
+  const google = {
     accounts: {
       id: {
         initialize: (config: InitializeConfig) => {
@@ -54,7 +55,10 @@ const installGoogleStub = () => {
         cancel,
       },
     },
-  } as unknown as typeof window.google;
+  };
+
+  window.googleScriptInitialized = true;
+  window.google = google;
 };
 
 /** Answers the callback endpoint and records what was posted to it. */
@@ -62,14 +66,17 @@ const captureCallback = () => {
   const captured: { body?: Record<string, unknown> } = {};
 
   server.use(
-    http.post(ONE_TAP_CALLBACK_ENDPOINT, async ({ request }) => {
-      captured.body = (await request.json()) as Record<string, unknown>;
+    http.post<PathParams, Record<string, unknown>>(
+      ONE_TAP_CALLBACK_ENDPOINT,
+      async ({ request }) => {
+        captured.body = await request.json();
 
-      return HttpResponse.json({
-        token: "a-session-token",
-        user: { id: "user_1", email: "founder@example.com" },
-      });
-    }),
+        return HttpResponse.json({
+          token: "a-session-token",
+          user: { id: "user_1", email: "founder@example.com" },
+        });
+      },
+    ),
   );
 
   return captured;

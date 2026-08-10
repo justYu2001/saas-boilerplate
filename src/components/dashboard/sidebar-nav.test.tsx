@@ -5,10 +5,10 @@ import { DASHBOARD_NAV, DASHBOARD_PATH } from "@/constants/dashboard";
 
 import { SidebarNav } from "./sidebar-nav";
 
-const usePathname = vi.fn();
+const usePathname = vi.fn<() => string>();
 
 vi.mock("next/navigation", () => ({
-  usePathname: () => usePathname() as string,
+  usePathname: () => usePathname(),
 }));
 
 const SETTINGS_PATH = `${DASHBOARD_PATH}/settings`;
