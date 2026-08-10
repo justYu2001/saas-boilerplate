@@ -31,7 +31,7 @@ export const sendLoginCodeEmail = async ({
   email,
   code,
   type,
-}: SendLoginCodeEmailInput): Promise<void> => {
+}: SendLoginCodeEmailInput) => {
   const { subject, html, text } = renderLoginCodeEmail({ code, type });
 
   const { data, error } = await resend.emails.send({

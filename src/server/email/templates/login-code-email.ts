@@ -107,7 +107,7 @@ const RESET =
  * meant to be edited by a fork, and that is exactly the kind of edit nobody
  * re-audits this file for.
  */
-const escapeHtml = (value: string): string => {
+const escapeHtml = (value: string) => {
   return value
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -123,7 +123,7 @@ const escapeHtml = (value: string): string => {
  * emoji or an astral-plane character yields a whole glyph instead of half a
  * surrogate pair.
  */
-const brandInitial = (): string => {
+const brandInitial = () => {
   return [...APP_NAME.trim()][0] ?? "";
 };
 
@@ -142,10 +142,7 @@ const brandInitial = (): string => {
  * and Apple Mail all agree on, and a login code is the last email that should
  * arrive looking broken.
  */
-export const renderLoginCodeEmail = ({
-  code,
-  type,
-}: LoginCodeEmailInput): LoginCodeEmail => {
+export const renderLoginCodeEmail = ({ code, type }: LoginCodeEmailInput) => {
   const copy = COPY[type];
   const safeCode = escapeHtml(code);
   const safeAppName = escapeHtml(APP_NAME);

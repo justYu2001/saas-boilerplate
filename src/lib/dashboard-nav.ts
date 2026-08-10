@@ -18,7 +18,7 @@ import { DASHBOARD_PATH } from "@/constants/dashboard";
  * arrangement of {@link DASHBOARD_NAV} — a fork that puts the root back in the
  * list gets the correct behaviour without re-deriving it.
  */
-export const isNavItemCurrent = (pathname: string, href: string): boolean => {
+export const isNavItemCurrent = (pathname: string, href: string) => {
   if (href === DASHBOARD_PATH) {
     return pathname === DASHBOARD_PATH;
   }

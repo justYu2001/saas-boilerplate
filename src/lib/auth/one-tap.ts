@@ -57,7 +57,7 @@ interface PromptOneTapOptions {
 export const promptOneTap = async ({
   onSignedIn,
   onDismissed,
-}: PromptOneTapOptions): Promise<void> => {
+}: PromptOneTapOptions) => {
   await authClient.oneTap({
     onPromptNotification: onDismissed,
     fetchOptions: {
@@ -75,6 +75,6 @@ export const promptOneTap = async ({
  * user onto whatever page they navigated to next. Safe to call when the script
  * never loaded or no prompt is showing.
  */
-export const cancelOneTap = (): void => {
+export const cancelOneTap = () => {
   window.google?.accounts.id.cancel();
 };
