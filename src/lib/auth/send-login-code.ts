@@ -17,14 +17,14 @@ import { authClient } from "@/server/better-auth/client";
  * turns that back into the exception the callers here promise, keeping the
  * `error` narrowing in one place instead of at all three call sites.
  */
-function assertOk(
+const assertOk = (
   error: { message?: string | undefined } | null,
   fallbackMessage: string,
-): void {
+): void => {
   if (error) {
     throw new Error(error.message ?? fallbackMessage);
   }
-}
+};
 
 /**
  * Emails a short-lived login code, creating the account on first use.
@@ -34,14 +34,14 @@ function assertOk(
  * provider failure is logged server-side rather than reported here. See the
  * note on `sendVerificationOTP` in `src/server/better-auth/config.ts`.
  */
-export async function sendLoginCode(email: string): Promise<void> {
+export const sendLoginCode = async (email: string): Promise<void> => {
   const { error } = await authClient.emailOtp.sendVerificationOtp({
     email,
     type: "sign-in",
   });
 
   assertOk(error, "Better Auth refused to send the login code.");
-}
+};
 
 /**
  * Verifies a login code and completes sign-in.
@@ -51,14 +51,14 @@ export async function sendLoginCode(email: string): Promise<void> {
  * in a row — at which point the code itself is discarded and the user needs a
  * new one.
  */
-export async function verifyLoginCode(
+export const verifyLoginCode = async (
   email: string,
   code: string,
-): Promise<void> {
+): Promise<void> => {
   const { error } = await authClient.signIn.emailOtp({ email, otp: code });
 
   assertOk(error, "Better Auth rejected the login code.");
-}
+};
 
 /**
  * Starts an OAuth redirect.
@@ -67,13 +67,13 @@ export async function verifyLoginCode(
  * on the happy path this never resolves — the page is gone. It only settles to
  * report that the redirect could not be started.
  */
-export async function signInWithProvider(
+export const signInWithProvider = async (
   provider: OAuthProvider["id"],
-): Promise<void> {
+): Promise<void> => {
   const { error } = await authClient.signIn.social({
     provider,
     callbackURL: LOGIN_REDIRECT_PATH,
   });
 
   assertOk(error, `Better Auth could not start the ${provider} redirect.`);
-}
+};

@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/card";
  * its own, before the two decorative layers — a warm field pulled from
  * `--primary` and a masked hairline grid — add depth.
  */
-export function AuthShell({ children }: PropsWithChildren) {
+export const AuthShell = ({ children }: PropsWithChildren) => {
   return (
     <main className="bg-muted/40 dark:bg-background relative isolate flex min-h-svh flex-col items-center justify-center gap-8 overflow-hidden px-4 py-12">
       <div
@@ -40,4 +40,4 @@ export function AuthShell({ children }: PropsWithChildren) {
       </Card>
     </main>
   );
-}
+};

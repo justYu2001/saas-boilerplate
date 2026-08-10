@@ -54,17 +54,17 @@ interface PromptOneTapOptions {
  * browser already has. Passing `fetchOptions` is what suppresses that
  * redirect, leaving the caller to navigate or re-render however it likes.
  */
-export async function promptOneTap({
+export const promptOneTap = async ({
   onSignedIn,
   onDismissed,
-}: PromptOneTapOptions): Promise<void> {
+}: PromptOneTapOptions): Promise<void> => {
   await authClient.oneTap({
     onPromptNotification: onDismissed,
     fetchOptions: {
       onSuccess: () => onSignedIn(),
     },
   });
-}
+};
 
 /**
  * Closes the prompt if it is open.
@@ -75,6 +75,6 @@ export async function promptOneTap({
  * user onto whatever page they navigated to next. Safe to call when the script
  * never loaded or no prompt is showing.
  */
-export function cancelOneTap(): void {
+export const cancelOneTap = (): void => {
   window.google?.accounts.id.cancel();
-}
+};

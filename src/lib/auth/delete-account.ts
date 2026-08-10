@@ -45,7 +45,7 @@ export class DeleteAccountError extends Error {
  * `@/server/better-auth/config`, not here: this runs in the browser and a
  * closed tab would skip it.
  */
-export async function deleteAccount(): Promise<void> {
+export const deleteAccount = async (): Promise<void> => {
   const { error } = await authClient.deleteUser({});
 
   if (!error) return;
@@ -54,4 +54,4 @@ export async function deleteAccount(): Promise<void> {
     error.code === STALE_SESSION_CODE ? "stale-session" : "unknown",
     error.message ?? "Better Auth refused to delete the account.",
   );
-}
+};

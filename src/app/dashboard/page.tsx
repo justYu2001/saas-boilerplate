@@ -10,11 +10,13 @@ export const metadata: Metadata = {
   title: COPY.title,
 };
 
-export default function DashboardOverviewPage() {
+const DashboardOverviewPage = () => {
   return (
     <>
       <PageHeader title={COPY.title} description={COPY.description} />
       <SourceNote path={COPY.source} />
     </>
   );
-}
+};
+
+export default DashboardOverviewPage;

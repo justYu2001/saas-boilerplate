@@ -23,13 +23,13 @@ vi.mock("next/navigation", () => ({
 
 const USER = { name: "Ada Lovelace", email: "ada@example.com", image: null };
 
-function renderShell(defaultCollapsed = false) {
+const renderShell = (defaultCollapsed = false) => {
   return render(
     <DashboardShell user={USER} defaultCollapsed={defaultCollapsed}>
       <p>Canvas</p>
     </DashboardShell>,
   );
-}
+};
 
 /** The element carrying the width the rail is drawn at. */
 const railWidth = () =>

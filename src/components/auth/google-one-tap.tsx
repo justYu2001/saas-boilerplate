@@ -23,7 +23,7 @@ import { authClient } from "@/server/better-auth/client";
  * prompt over its content. Placement makes the default silence: a new page has
  * to opt in by mounting this, and reading the page tells you whether it did.
  */
-export function GoogleOneTap() {
+export const GoogleOneTap = () => {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
 
@@ -79,4 +79,4 @@ export function GoogleOneTap() {
   }, [isPending, session, router]);
 
   return null;
-}
+};

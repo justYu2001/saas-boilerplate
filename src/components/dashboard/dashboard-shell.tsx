@@ -32,7 +32,7 @@ interface DashboardShellProps extends PropsWithChildren {
   user: SidebarAccountUser;
   /** Read from the cookie on the server, so the rail paints at its real width. */
   defaultCollapsed: boolean;
-};
+}
 
 /**
  * Chrome for every signed-in route: a rail on the left, the canvas beside it.
@@ -44,20 +44,20 @@ interface DashboardShellProps extends PropsWithChildren {
  * between two real surfaces is the more honest edge and survives dark mode,
  * where a drop shadow has nothing to fall on.
  */
-export function DashboardShell({
+export const DashboardShell = ({
   user,
   defaultCollapsed,
   children,
-}: DashboardShellProps) {
+}: DashboardShellProps) => {
   const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
-  function toggleCollapsed() {
+  const toggleCollapsed = () => {
     const next = !isCollapsed;
 
     setIsCollapsed(next);
     document.cookie = `${SIDEBAR_COLLAPSED_COOKIE}=${String(next)}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE_SECONDS}; samesite=lax`;
-  }
+  };
 
   return (
     <TooltipProvider delay={300}>
@@ -172,4 +172,4 @@ export function DashboardShell({
       </div>
     </TooltipProvider>
   );
-}
+};

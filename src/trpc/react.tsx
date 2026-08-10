@@ -39,7 +39,7 @@ export type RouterInputs = inferRouterInputs<AppRouter>;
  */
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
-export function TRPCReactProvider(props: PropsWithChildren) {
+export const TRPCReactProvider = (props: PropsWithChildren) => {
   const queryClient = getQueryClient();
 
   const [trpcClient] = useState(() =>
@@ -70,10 +70,10 @@ export function TRPCReactProvider(props: PropsWithChildren) {
       </api.Provider>
     </QueryClientProvider>
   );
-}
+};
 
-function getBaseUrl() {
+const getBaseUrl = () => {
   if (typeof window !== "undefined") return window.location.origin;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   return `http://localhost:${process.env.PORT ?? 3000}`;
-}
+};

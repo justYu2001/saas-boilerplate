@@ -78,7 +78,7 @@ const homeSchema: Graph = {
   "@graph": [personSchema, websiteSchema, softwareApplication],
 };
 
-export default function Home() {
+const Home = () => {
   return (
     <>
       <JsonLd data={homeSchema} />
@@ -105,4 +105,6 @@ export default function Home() {
       <FooterSection />
     </>
   );
-}
+};
+
+export default Home;

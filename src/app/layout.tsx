@@ -21,7 +21,7 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
-export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
+const RootLayout = ({ children }: Readonly<PropsWithChildren>) => {
   return (
     <html lang="en" className={geist.variable} suppressHydrationWarning>
       <body className="bg-background min-h-screen">
@@ -38,4 +38,6 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

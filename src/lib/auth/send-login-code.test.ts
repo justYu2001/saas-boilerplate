@@ -28,10 +28,10 @@ interface Captured {
 }
 
 /** Answers `endpoint` with `response` and records what was posted to it. */
-function capture(
+const capture = (
   endpoint: string,
   response: Record<string, unknown>,
-): Captured {
+): Captured => {
   const captured: Captured = {};
 
   server.use(
@@ -43,7 +43,7 @@ function capture(
   );
 
   return captured;
-}
+};
 
 /** Better Auth's error envelope, as the client sees it. */
 const failWith = (endpoint: string, status: number, message: string) =>

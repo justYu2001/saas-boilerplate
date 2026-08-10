@@ -67,13 +67,13 @@ export const ContactSection = () => {
     },
   });
 
-  function onSubmit({
+  const onSubmit = ({
     firstName,
     lastName,
     email,
     subject,
     message,
-  }: ContactForm) {
+  }: ContactForm) => {
     const mailToLink = `mailto:leomirandadev@gmail.com?subject=${encodeURIComponent(
       subject,
     )}&body=${encodeURIComponent(
@@ -81,7 +81,7 @@ export const ContactSection = () => {
     )}`;
 
     window.location.assign(mailToLink);
-  }
+  };
 
   return (
     <section id="contact" className="container py-24 sm:py-32">
