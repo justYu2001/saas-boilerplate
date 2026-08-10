@@ -2,7 +2,7 @@
 
 import { ChevronsLeft, ChevronsRight, Menu } from "lucide-react";
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useState, type PropsWithChildren } from "react";
 
 import { Logo } from "@/components/brand/logo";
 import type { SidebarAccountUser } from "@/components/dashboard/sidebar-account";
@@ -28,12 +28,11 @@ import {
   SIDEBAR_WIDTH,
 } from "@/constants/dashboard";
 
-interface DashboardShellProps {
+interface DashboardShellProps extends PropsWithChildren {
   user: SidebarAccountUser;
   /** Read from the cookie on the server, so the rail paints at its real width. */
   defaultCollapsed: boolean;
-  children: ReactNode;
-}
+};
 
 /**
  * Chrome for every signed-in route: a rail on the left, the canvas beside it.

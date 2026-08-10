@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { PropsWithChildren } from "react";
 
 import { Navbar } from "@/components/layout/navbar";
 import { getSession } from "@/server/better-auth/server";
@@ -24,7 +24,7 @@ import { getSession } from "@/server/better-auth/server";
  */
 export default async function MarketingLayout({
   children,
-}: Readonly<{ children: ReactNode }>) {
+}: Readonly<PropsWithChildren>) {
   const session = await getSession();
 
   return (

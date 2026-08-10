@@ -1,13 +1,8 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { PropsWithChildren } from "react";
 
 import { Logo } from "@/components/brand/logo";
 import { Card } from "@/components/ui/card";
-
-interface AuthShellProps {
-  /** Card contents — compose with `CardHeader` / `CardContent`. */
-  children: ReactNode;
-}
 
 /**
  * Centred single-card frame shared by every authentication surface.
@@ -20,7 +15,7 @@ interface AuthShellProps {
  * its own, before the two decorative layers — a warm field pulled from
  * `--primary` and a masked hairline grid — add depth.
  */
-export function AuthShell({ children }: AuthShellProps) {
+export function AuthShell({ children }: PropsWithChildren) {
   return (
     <main className="bg-muted/40 dark:bg-background relative isolate flex min-h-svh flex-col items-center justify-center gap-8 overflow-hidden px-4 py-12">
       <div

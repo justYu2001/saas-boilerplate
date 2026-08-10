@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
-import type { ReactNode } from "react";
+import type { PropsWithChildren } from "react";
 
 import { CrispChat } from "@/components/crips-chat";
 import { ThemeProvider } from "@/components/layout/theme-provider";
@@ -21,9 +21,7 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: ReactNode }>) {
+export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
   return (
     <html lang="en" className={geist.variable} suppressHydrationWarning>
       <body className="bg-background min-h-screen">

@@ -1,11 +1,10 @@
-import type { ReactNode } from "react";
+import type { PropsWithChildren } from "react";
 
-interface PageHeaderProps {
+/** `children` are the primary actions for the page, aligned to the heading's baseline row. */
+interface PageHeaderProps extends PropsWithChildren {
   title: string;
   description?: string;
-  /** Primary actions for the page, aligned to the heading's baseline row. */
-  children?: ReactNode;
-}
+};
 
 /**
  * The heading block every dashboard page opens with.
