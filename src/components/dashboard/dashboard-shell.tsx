@@ -64,13 +64,11 @@ export function DashboardShell({
     <TooltipProvider delay={300}>
       <div
         className="flex min-h-svh"
-        style={
-          {
-            "--sidebar-width": isCollapsed
-              ? SIDEBAR_WIDTH.collapsed
-              : SIDEBAR_WIDTH.expanded,
-          } as React.CSSProperties
-        }
+        style={{
+          "--sidebar-width": isCollapsed
+            ? SIDEBAR_WIDTH.collapsed
+            : SIDEBAR_WIDTH.expanded,
+        }}
       >
         {/*
          * Width is a layout property and normally the wrong thing to animate.

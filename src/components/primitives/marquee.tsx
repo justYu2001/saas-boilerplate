@@ -1,3 +1,5 @@
+import type { ComponentProps } from "react";
+
 import { cn } from "@/lib/utils";
 
 /**
@@ -6,7 +8,7 @@ import { cn } from "@/lib/utils";
  * translates by exactly its own width plus one gap, landing where the original
  * started.
  */
-function Marquee({
+const Marquee = ({
   className,
   innerClassName,
   fade = false,
@@ -15,13 +17,13 @@ function Marquee({
   duration = "30s",
   children,
   ...props
-}: React.ComponentProps<"div"> & {
+}: ComponentProps<"div"> & {
   innerClassName?: string;
   fade?: boolean;
   pauseOnHover?: boolean;
   gap?: string;
   duration?: string;
-}) {
+}) => {
   const track = cn(
     "flex min-w-full shrink-0 items-center justify-around gap-(--marquee-gap)",
     "animate-marquee motion-reduce:animate-none",
@@ -32,12 +34,10 @@ function Marquee({
   return (
     <div
       data-slot="marquee"
-      style={
-        {
-          "--marquee-gap": gap,
-          "--marquee-duration": duration,
-        } as React.CSSProperties
-      }
+      style={{
+        "--marquee-gap": gap,
+        "--marquee-duration": duration,
+      }}
       className={cn(
         "group/marquee flex w-full gap-(--marquee-gap) overflow-hidden",
         fade &&
@@ -52,6 +52,6 @@ function Marquee({
       </div>
     </div>
   );
-}
+};
 
 export { Marquee };
