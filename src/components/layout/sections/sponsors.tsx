@@ -1,5 +1,5 @@
+import { Marquee } from "@/components/primitives/marquee";
 import { Icon, type IconName } from "@/components/ui/icon";
-import { Marquee } from "@/components/ui/marquee";
 
 interface SponsorProps {
   icon: IconName;
