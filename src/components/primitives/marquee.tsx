@@ -27,7 +27,7 @@ const Marquee = ({
   const track = cn(
     "flex min-w-full shrink-0 items-center justify-around gap-(--marquee-gap)",
     "animate-marquee motion-reduce:animate-none",
-    pauseOnHover && "group-hover/marquee:[animation-play-state:paused]",
+    pauseOnHover && "group-hover/marquee:paused",
     innerClassName,
   );
 
@@ -41,7 +41,7 @@ const Marquee = ({
       className={cn(
         "group/marquee flex w-full gap-(--marquee-gap) overflow-hidden",
         fade &&
-          "[mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]",
+          "mask-[linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]",
         className,
       )}
       {...props}

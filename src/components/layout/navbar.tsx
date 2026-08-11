@@ -181,7 +181,7 @@ export const Navbar = ({ isSignedIn }: NavbarProps) => {
               Features
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <div className="grid w-[600px] grid-cols-2 gap-5 p-4">
+              <div className="grid w-150 grid-cols-2 gap-5 p-4">
                 <Image
                   src="https://avatars.githubusercontent.com/u/75042455?v=4"
                   alt="SaaS Boilerplate"
