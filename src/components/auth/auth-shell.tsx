@@ -24,7 +24,7 @@ export const AuthShell = ({ children }: PropsWithChildren) => {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 [background-image:linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] [mask-image:radial-gradient(36rem_28rem_at_50%_46%,black,transparent)] bg-size-[44px_44px] opacity-70 dark:opacity-100"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] mask-[radial-gradient(36rem_28rem_at_50%_46%,black,transparent)] bg-size-[44px_44px] opacity-70 dark:opacity-100"
       />
 
       <Link

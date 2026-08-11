@@ -56,7 +56,7 @@ export const SidebarNav = ({
               )}
             >
               <span className="grid size-10 shrink-0 place-items-center">
-                <Icon aria-hidden="true" className="size-[1.125rem]" />
+                <Icon aria-hidden="true" className="size-4.5" />
               </span>
 
               <span
