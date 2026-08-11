@@ -6,7 +6,8 @@ import { z } from "zod";
  * 5322: the job here is to catch a misconfigured `.env` at boot rather than to
  * re-implement address parsing that Resend already does at send time.
  */
-const EMAIL_FROM_PATTERN = /^(?:[^<>]+ )?<?[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+>?$/;
+const EMAIL_FROM_PATTERN =
+  /^(?:[^<>]+ )?<?[^\s@<>]+@[^\s@<>.]+(?:\.[^\s@<>.]+)+>?$/;
 
 export const env = createEnv({
   /**

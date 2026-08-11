@@ -1,5 +1,5 @@
 /** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions & import("@ianvs/prettier-plugin-sort-imports").PluginConfig} */
-export default {
+const config = {
   arrowParens: "always",
   printWidth: 80,
   singleQuote: false,
@@ -23,3 +23,5 @@ export default {
     "^[.]/",
   ],
 };
+
+export default config;

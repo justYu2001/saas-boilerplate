@@ -50,11 +50,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # next lint loads next.config.js, which imports src/env.js. SKIP_ENV_VALIDATION
-      # bypasses the real env schema check here since CI has no .env.
+      # `check` runs eslint and tsc directly, neither of which loads
+      # next.config.js, so no env vars are needed here.
       - run: pnpm check
-        env:
-          SKIP_ENV_VALIDATION: "1"
 
   test:
     name: Test
