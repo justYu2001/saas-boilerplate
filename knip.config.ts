@@ -11,10 +11,17 @@ process.env.SKIP_ENV_VALIDATION ??= "1";
 
 export default {
   /**
-   * The rest of the entry points are left at their defaults: the `next` plugin
-   * already claims `src/app/**` routes and `next.config.js`, `vitest` claims
-   * the test files and `vitest.setup.ts`, and `tooling/setup.ts` is reached
-   * through the `setup` script in package.json.
+   * Plugin entry points still apply alongside this list: the `next` plugin
+   * claims `src/app/**` routes and `next.config.js`, `vitest` claims the test
+   * files and `vitest.setup.ts`, and `tooling/setup.ts` is reached through the
+   * `setup` script in package.json.
+   *
+   * What the list does replace is knip's own default entry patterns —
+   * `index.ts`, `src/index.ts` and friends. Naming `entry` overrides those
+   * rather than extending them. That costs nothing in a Next.js app, where
+   * every real entry arrives from a plugin and none of those paths exist, but
+   * it does mean adding `src/index.ts` later would see it reported as an
+   * unused file until it is listed here too.
    */
   entry: [
     /**
