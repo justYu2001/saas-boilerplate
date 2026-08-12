@@ -38,4 +38,12 @@ export const authClient = createAuthClient({
   ],
 });
 
+/**
+ * The session as the browser sees it, inferred from the client's own plugin
+ * list. Distinct from the server-side `Session` in `./config` — that one is
+ * inferred from the server plugins, and the two lists are not identical.
+ *
+ * @public Part of the surface a client component reaches for once it needs to
+ * type a session it is handed; nothing imports it yet.
+ */
 export type Session = typeof authClient.$Infer.Session;

@@ -138,4 +138,12 @@ export const auth = betterAuth({
   ],
 });
 
+/**
+ * The session as the server sees it, inferred from this plugin list. Its
+ * counterpart in `./client` is inferred from the client's list instead, so the
+ * two are related but not interchangeable.
+ *
+ * @public Part of the surface server code reaches for once it needs to type a
+ * session it is handed; nothing imports it yet.
+ */
 export type Session = typeof auth.$Infer.Session;

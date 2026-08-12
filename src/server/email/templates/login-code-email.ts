@@ -10,6 +10,12 @@ import { LOGIN_CODE_TTL_MINUTES } from "@/constants/auth";
 export type LoginCodeEmailType =
   "sign-in" | "email-verification" | "forget-password" | "change-email";
 
+/**
+ * What `renderLoginCodeEmail` hands back: a subject plus both body parts, ready
+ * to pass straight to Resend.
+ *
+ * @public Named so a second sender does not have to re-describe the shape.
+ */
 export interface LoginCodeEmail {
   subject: string;
   html: string;

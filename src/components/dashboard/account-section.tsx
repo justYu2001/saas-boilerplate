@@ -2,6 +2,12 @@ import { DeleteAccountDialog } from "@/components/dashboard/delete-account-dialo
 import { ACCOUNT_COPY } from "@/constants/account";
 import { resolveAccountName, type AccountIdentity } from "@/lib/account";
 
+/**
+ * The user shape a page has to assemble before it can render `AccountSection`.
+ *
+ * @public Exported for those callers. The settings page happens to build the
+ * object inline today, so nothing imports the name yet.
+ */
 export interface AccountSectionUser extends AccountIdentity {
   /** When the account was created, straight from the `user` row. */
   createdAt: Date;

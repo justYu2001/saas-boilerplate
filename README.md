@@ -148,6 +148,7 @@ position, so it cannot be moved or restyled.
 | `pnpm test:watch`                      | Vitest, watching                        |
 | `pnpm test:coverage`                   | Vitest with coverage                    |
 | `pnpm format:write`                    | Prettier over the repo                  |
+| `pnpm knip`                            | Find unused files, exports and deps     |
 | `pnpm db:start` / `pnpm db:stop`       | Start or stop the local Postgres        |
 | `pnpm db:push`                         | Push the Drizzle schema to the database |
 | `pnpm db:generate` / `pnpm db:migrate` | Generate and run migrations             |
