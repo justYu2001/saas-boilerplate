@@ -84,7 +84,7 @@
     "knip": "6.33.0",
     "msw": "2.15.0",
     "pg": "8.23.0",
-    "postcss": "8.5.25",
+    "postcss": "8.5.28",
     "prettier": "3.9.6",
     "prettier-plugin-tailwindcss": "0.8.1",
     "schema-dts": "2.0.0",
