@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { emailOTP, oneTap } from "better-auth/plugins";
+import { v7 as uuidv7 } from "uuid";
 
 import {
   LOGIN_CODE_LENGTH,
@@ -22,6 +23,11 @@ export const auth = betterAuth({
     // isn't flipped on without noticing the driver can't honour it.
     transaction: false,
   }),
+  advanced: {
+    database: {
+      generateId: () => uuidv7(),
+    },
+  },
   emailAndPassword: {
     enabled: true,
   },
