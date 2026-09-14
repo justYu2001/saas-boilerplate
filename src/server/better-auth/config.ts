@@ -13,6 +13,8 @@ import { env } from "@/env";
 import { db } from "@/server/db";
 import { sendLoginCodeEmail } from "@/server/email/send-login-code-email";
 
+import { generateId } from "./generate-id";
+
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
   database: drizzleAdapter(db, {
@@ -22,6 +24,24 @@ export const auth = betterAuth({
     // isn't flipped on without noticing the driver can't honour it.
     transaction: false,
   }),
+  advanced: {
+    database: {
+      /*
+       * UUIDv7 for every row Better Auth creates, replacing its default random
+       * 32-character string. See `./generate-id` for why, and for the one
+       * property of v7 — an embedded creation timestamp — that a fork may not
+       * want.
+       *
+       * This changes new rows only. Ids already in the database keep the shape
+       * they were written with, and nothing needs to migrate: `user.id`,
+       * `session.id`, `account.id`, and `verification.id` are `text` columns
+       * in `@/server/db/schema`, wide enough for either format. Narrowing them
+       * to Postgres `uuid` would be a one-way door that fails on the first
+       * legacy row.
+       */
+      generateId,
+    },
+  },
   emailAndPassword: {
     enabled: true,
   },
