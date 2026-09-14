@@ -23,4 +23,4 @@ import { v7 as uuidv7 } from "uuid";
  * `crypto.randomUUID()` — a v4, random across its whole width — so it buys the
  * format without any of the ordering this exists for.
  */
-export const generateId = (): string => uuidv7();
+export const generateId = () => uuidv7();
