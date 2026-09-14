@@ -1,7 +1,6 @@
 import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
-import markdown from "@eslint/markdown";
 import vitest from "@vitest/eslint-plugin";
 // @ts-ignore -- no types for this plugin
 import drizzle from "eslint-plugin-drizzle";
@@ -15,9 +14,9 @@ const compat = new FlatCompat({
 
 /**
  * Every config block that carries JS/TS rules has to name these explicitly.
- * ESLint now lints Markdown, JSON and other languages too, and a block without
- * a `files` key applies to all of them — which crashes any rule that assumes a
- * JS source tree.
+ * ESLint now lints JSON and other languages too, and a block without a `files`
+ * key applies to all of them — which crashes any rule that assumes a JS source
+ * tree.
  */
 const SOURCE = ["**/*.{js,jsx,mjs,cjs,ts,tsx}"];
 
@@ -125,20 +124,6 @@ export default tseslint.config(
     // These two carry comments, which strict JSON forbids.
     files: ["tsconfig.json", "components.json"],
     extends: [jsonc.configs["flat/recommended-with-jsonc"]],
-  },
-
-  {
-    files: ["**/*.md"],
-    extends: [markdown.configs.recommended],
-    rules: {
-      // https://github.com/eslint/markdown/issues/294
-      "markdown/no-missing-label-refs": "off",
-    },
-  },
-  {
-    // Fenced code blocks have no tsconfig behind them.
-    files: ["**/*.md/*.{js,jsx,ts,tsx}"],
-    extends: [tseslint.configs.disableTypeChecked],
   },
 
   {
