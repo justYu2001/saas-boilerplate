@@ -10,6 +10,7 @@ import { type KnipConfig } from "knip";
 process.env.SKIP_ENV_VALIDATION ??= "1";
 
 export default {
+  ignore: [".claude/**"],
   /**
    * Plugin entry points still apply alongside this list: the `next` plugin
    * claims `src/app/**` routes and `next.config.js`, `vitest` claims the test
