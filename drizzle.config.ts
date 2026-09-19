@@ -1,15 +1,12 @@
-import { type Config } from "drizzle-kit";
-
 import { env } from "@/env";
 
-export default {
-  schema: "./src/server/db/schema.ts",
-  dialect: "postgresql",
-  dbCredentials: {
-    url: env.DATABASE_URL,
-  },
-  // No `tablesFilter`: this database is dedicated to the app, so drizzle-kit
-  // should see every table. A filter here would hide the Better Auth tables
-  // (`user`, `session`, `account`, `verification`) from introspection, making
-  // push try to re-create them on every run.
-} satisfies Config;
+import { createDrizzleConfig } from "./drizzle.base";
+
+/**
+ * Local development. drizzle-kit loads `.env` itself before evaluating this
+ * file, so `@/env` sees the same variables the dev server does.
+ *
+ * For the production database use `drizzle.prod.config.ts` instead — see the
+ * `db:*:prod` scripts in package.json.
+ */
+export default createDrizzleConfig(env.DATABASE_URL);

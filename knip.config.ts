@@ -37,6 +37,14 @@ export default {
      */
     "src/trpc/server.ts",
     "src/trpc/react.tsx",
+    /**
+     * The drizzle plugin claims `drizzle.config.ts`, but the production
+     * variant is only ever named in a `--config=` argument inside a
+     * package.json script, which knip does not follow. Without this it reads
+     * as an unused file, and `dotenv` — imported nowhere else — as an unused
+     * dependency.
+     */
+    "drizzle.prod.config.ts",
   ],
   ignoreDependencies: [
     /**
