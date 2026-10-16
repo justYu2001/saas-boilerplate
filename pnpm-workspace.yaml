@@ -7,4 +7,6 @@ allowBuilds:
   unrs-resolver: true
 
 minimumReleaseAge: 4320
-
+minimumReleaseAgeExclude:
+  # Renovate security update: next@15.5.27
+  - next@15.5.27
